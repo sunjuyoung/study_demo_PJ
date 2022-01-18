@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -52,6 +53,7 @@ public class Account {
     private boolean studyUpdatedByEmail;
 
 
-
-
+    public void generateToken() {
+        this.emailCheckToken= UUID.randomUUID().toString();
+    }
 }
