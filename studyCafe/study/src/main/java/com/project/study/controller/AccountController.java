@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
@@ -48,14 +49,29 @@ public class AccountController {
         if(errors.hasErrors()){
             return "account/sign-up";
         }
-
         Account newAccount = accountService.saveNewAccount(signUpForm);
-        newAccount.generateToken();
+
         accountService.sendSignUpConfirmEmail(newAccount);
         return "redirect:/";
     }
 
 
+    @GetMapping("/check-email-token")
+    public String checkEmailToken(String token,String email,Model model){
+        Account account = accountRepository.findByEmail(email);
+        if(account==null){
+             model.addAttribute("error","wrong.email");
+            return "account/checked-email";
+        }
+        if(!account.getEmailCheckToken().equals(token)){
+            model.addAttribute("error","wrong.token");
+            return "account/checked-email";
+        }
+        account.setEmailVerified(true);
+        account.setJoinedAt(LocalDateTime.now());
+        model.addAttribute("nickname",account.getNickname());
+        return "account/checked-email";
+    }
 
 
 }

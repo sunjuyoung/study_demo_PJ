@@ -29,6 +29,7 @@ public class AccountService {
                 .studyEnrollmentResultByWeb(true)
                 .studyUpdatedByWeb(true)
                 .build();
+        account.generateToken();
         return accountRepository.save(account);
     }
 
