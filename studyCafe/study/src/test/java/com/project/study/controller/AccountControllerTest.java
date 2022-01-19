@@ -1,5 +1,6 @@
 package com.project.study.controller;
 
+import com.project.study.domain.Account;
 import com.project.study.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,9 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         assertTrue(accountRepository.existsByEmail("test@naver.com"));
+        Account account = accountRepository.findByEmail("test@naver.com");
+        assertNotNull(account);
+        assertNotEquals(account.getPassword(),"12341234");
 
     }
 }
