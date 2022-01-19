@@ -4,6 +4,7 @@ import com.project.study.config.SignUpFormValidation;
 import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
+import com.project.study.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +27,7 @@ public class AccountController {
 
     private final SignUpFormValidation signUpFormValidation;
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    private final AccountService accountService;
 
     //닉네임 이메일 중복 검증
     @InitBinder("singUpForm")
@@ -48,24 +49,13 @@ public class AccountController {
             return "account/sign-up";
         }
 
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(signUpForm.getPassword())
-                .studyCreatedByWeb(true)
-                .studyEnrollmentResultByWeb(true)
-                .studyUpdatedByWeb(true)
-                .build();
-        Account newAccount = accountRepository.save(account);
+        Account newAccount = accountService.saveNewAccount(signUpForm);
         newAccount.generateToken();
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("스터디카페 가입인증");
-        mailMessage.setText("/check-email-token?token="+newAccount.getEmailCheckToken()+"&email="+newAccount.getEmail());
-        javaMailSender.send(mailMessage);
+        accountService.sendSignUpConfirmEmail(newAccount);
         return "redirect:/";
     }
+
+
 
 
 }
