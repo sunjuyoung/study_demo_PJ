@@ -52,6 +52,7 @@ public class AccountController {
         Account newAccount = accountService.saveNewAccount(signUpForm);
 
         accountService.sendSignUpConfirmEmail(newAccount);
+        accountService.login(newAccount);
         return "redirect:/";
     }
 
@@ -67,8 +68,7 @@ public class AccountController {
             model.addAttribute("error","wrong.token");
             return "account/checked-email";
         }
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
+        account.completeSignUp();//joinAt,EmailVerified
         model.addAttribute("nickname",account.getNickname());
         return "account/checked-email";
     }

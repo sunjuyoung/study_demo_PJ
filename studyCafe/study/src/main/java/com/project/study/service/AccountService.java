@@ -6,11 +6,15 @@ import com.project.study.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +43,15 @@ public class AccountService {
         mailMessage.setSubject("스터디카페 가입인증");
         mailMessage.setText("/check-email-token?token="+newAccount.getEmailCheckToken()+"&email="+newAccount.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void login(Account newAccount) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                newAccount.getNickname(),
+                newAccount.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(token);
     }
 }
