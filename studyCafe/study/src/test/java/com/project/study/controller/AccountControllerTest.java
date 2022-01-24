@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -70,7 +71,7 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("회원 가입 폼")
+    @DisplayName("회원 가입")
     public void signUpForm() throws Exception{
         mockMvc.perform(post("/sign-up")
                         .param("nickname","sun")
@@ -78,7 +79,8 @@ class AccountControllerTest {
                         .param("password","12341234"))
                 //.andExpect(view().name("account/sign-up"));  회원 가입 실패
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+        .andExpect(authenticated());
 
         assertTrue(accountRepository.existsByEmail("test@naver.com"));
         Account account = accountRepository.findByEmail("test@naver.com");
