@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +15,9 @@ import java.util.UUID;
 @Builder
 public class Account {
 
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     private Long id;
 
 
@@ -45,18 +48,39 @@ public class Account {
     private boolean studyCreatedByWeb = true;
 
     private boolean studyEnrollmentResultByEmail; //스터디 가입신청결과
-    private boolean studyEnrollmentResultByWeb  = true;
+    private boolean studyEnrollmentResultByWeb = true;
 
-    private boolean studyUpdatedByWeb  = true;
+    private boolean studyUpdatedByWeb = true;
     private boolean studyUpdatedByEmail;
 
+    private LocalDateTime emailCheckAt;
+    private int countConfirmEmail;
 
     public void generateToken() {
-        this.emailCheckToken= UUID.randomUUID().toString();
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckAt = LocalDateTime.now();
     }
 
     public void completeSignUp() {
-        this.emailVerified=true;
+        this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
+    }
+
+    public boolean resendConfirmEmail() {
+        return this.emailCheckAt.isBefore(LocalDateTime.now().minusMinutes(15));
+    }
+
+    public boolean checkSendConfirmEmail() {
+        if (this.countConfirmEmail >= 2) {
+            if (resendConfirmEmail()) {
+                this.countConfirmEmail = 0;
+            }
+            this.emailCheckAt = LocalDateTime.now();
+            return false;
+        } else {
+            this.countConfirmEmail++;
+            return true;
+        }
+      //  return this.emailCheckAt.isBefore(LocalDateTime.now().minusMinutes(15));
     }
 }

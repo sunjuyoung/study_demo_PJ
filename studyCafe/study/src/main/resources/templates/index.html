@@ -3,7 +3,10 @@
 <head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
-<div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}"></div>
+<div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}"
+    가입을 완료 하려면 이메일을 확인하여 인증을 완료하세요.
+     <samll><a th:href="@{/check-email}">이메일 인증 완료하세요</a></samll>
+</div>
 <section class="jumbotron text-center">
     <div class="container">
         <h1>스터디</h1>
@@ -11,9 +14,9 @@
             태그와 지역 기반으로 스터디를 찾고 참여하세요.<br/>
             스터디 모임 관리 기능을 제공합니다.
         </p>
-        <p>
+<!--        <p>
             <a th:href="@{/sign-up}" class="btn btn-primary my-2">회원 가입</a>
-        </p>
+        </p>-->
     </div>
 </section>
 <div class="container">

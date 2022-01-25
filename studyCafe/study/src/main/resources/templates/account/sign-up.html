@@ -1,26 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
                 xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<!--<head>
-    <title>StudyCafe</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <style>
-        .container{
-            max-width: 100%;
-        }
-    </style>
-</head>-->
-
 <head th:replace="fragments.html :: head"></head>
-
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
-
 <div class="container">
     <div class="py-5 text-center">
         <h2>계정 만들기</h2>
     </div>
-
     <div class="row justify-content-center">
         <form class="needs-validation col-sm-6" action="#"
               th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>

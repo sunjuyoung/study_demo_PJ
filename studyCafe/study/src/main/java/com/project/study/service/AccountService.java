@@ -1,5 +1,6 @@
 package com.project.study.service;
 
+import com.project.study.auth.UserAccount;
 import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
@@ -47,7 +48,7 @@ public class AccountService {
 
     public void login(Account newAccount) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                newAccount.getNickname(),
+               new UserAccount(newAccount),   //principle
                 newAccount.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );

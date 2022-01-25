@@ -1,5 +1,6 @@
 package com.project.study.controller;
 
+import com.project.study.auth.CurrentUser;
 import com.project.study.config.SignUpFormValidation;
 import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
@@ -56,6 +57,28 @@ public class AccountController {
         return "redirect:/";
     }
 
+    @GetMapping("/check-email")
+    public String checkEmail(@CurrentUser Account account, Model model){
+        model.addAttribute(account);
+       // accountService.sendSignUpConfirmEmail(account);
+
+        return "account/check-email";
+    }
+
+    @GetMapping("/resend-confirm-email")
+    public String resendConfirmEmail(@CurrentUser Account account,Model model){
+        if(!account.checkSendConfirmEmail()){
+            model.addAttribute("error","잠시 뒤 다시 전송해 주세요");
+            model.addAttribute(account);
+            return "account/check-email";
+        }
+
+        model.addAttribute(account);
+        accountService.sendSignUpConfirmEmail(account);
+
+        return "redirect:/";
+
+    }
 
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token,String email,Model model){
