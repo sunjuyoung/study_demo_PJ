@@ -88,21 +88,19 @@ public class AccountController {
             model.addAttribute("error","wrong.token");
             return "account/checked-email";
         }
-        account.completeSignUp();//joinAt,EmailVerified
+        accountService.completeSignUp(account);
+
         model.addAttribute("nickname",account.getNickname());
         return "account/checked-email";
     }
 
 
     @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable("nickname")String nickname,Model model,@CurrentUser Account account){
-        Account byNickname = accountRepository.findByNickname(nickname);
-        if(byNickname==null){
-             new IllegalArgumentException(byNickname +"에 해당하는 사용자가 없습니다");
-        }
+    public String viewProfile(@PathVariable String nickname,Model model,@CurrentUser Account account){
+        Account getAccount = accountService.getAccount(nickname);
 
-        model.addAttribute("account",byNickname);
-        model.addAttribute("isOwner",byNickname.equals(account));
+        model.addAttribute("account",getAccount);
+        model.addAttribute("isOwner",getAccount.equals(account));
         return "account/profile";
     }
 

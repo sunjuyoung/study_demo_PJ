@@ -15,12 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
 
@@ -70,5 +72,19 @@ public class AccountService implements UserDetailsService {
         }
 
         return new UserAccount(account);
+    }
+
+    public void completeSignUp(Account account) {
+        account.completeSignUp();//joinAt,EmailVerified
+        login(account);
+    }
+
+    public Account getAccount(String nickname) {
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if(byNickname==null){
+            new IllegalArgumentException(byNickname +"에 해당하는 사용자가 없습니다");
+        }
+        return byNickname;
+
     }
 }
