@@ -6,6 +6,7 @@ import com.project.study.dto.ProfileForm;
 import com.project.study.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SettingsService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void updateProfile(Account account, ProfileForm profileForm) {
         account.setBio(profileForm.getBio());
@@ -27,7 +29,7 @@ public class SettingsService {
     }
 
     public void changePassword(Account account, PasswordForm passwordForm) {
-        account.setPassword(passwordForm.getNewPassword());
+        account.setPassword(passwordEncoder.encode(passwordForm.getNewPassword()));
         accountRepository.save(account);
     }
 }

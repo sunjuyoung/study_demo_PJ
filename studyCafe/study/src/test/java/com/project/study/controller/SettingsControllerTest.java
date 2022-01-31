@@ -4,6 +4,8 @@ import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
 import com.project.study.service.AccountService;
+import com.project.study.service.SettingsService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +19,12 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 class SettingsControllerTest {
@@ -35,7 +39,10 @@ class SettingsControllerTest {
     AccountService accountService;
 
     @Autowired
-     PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    SettingsService settingsService;
 
 
     @BeforeEach
@@ -62,15 +69,20 @@ class SettingsControllerTest {
     }
 
 
-/*    @WithUserDetails(value = "test",setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("비밀번호 테스트")
+    @WithUserDetails(value = "test",setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("비밀번호 변경")
     @Test
     public void test1() throws Exception{
-        String password = "12341234";
-        Account test = accountRepository.findByNickname("test");
-        assertTrue(PasswordEncoderFactories.createDelegatingPasswordEncoder().matches(test.getPassword(),password));
 
-    }*/
+        String newPassword = "43214321";
+        mockMvc.perform(post("/settings/password").param("newPassword",newPassword)
+        .param("newPasswordConfirm",newPassword))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"));
+
+        Account byNickname = accountRepository.findByNickname("test");
+        assertTrue(passwordEncoder.matches(newPassword,byNickname.getPassword()));
+    }
 
 
 }

@@ -2,6 +2,7 @@ package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
+import com.project.study.dto.NotificationsForm;
 import com.project.study.dto.PasswordForm;
 import com.project.study.dto.ProfileForm;
 import com.project.study.service.AccountService;
@@ -9,6 +10,7 @@ import com.project.study.service.SettingsService;
 import com.project.study.valid.PasswordFormValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,6 +31,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final SettingsService settingsService;
     private final PasswordFormValidation passwordFormValidation;
+    private final ModelMapper modelMapper;
 
 
     @InitBinder("passwordForm")
@@ -59,17 +62,28 @@ public class SettingsController {
     @GetMapping("/settings/password")
     public String profilePassword(@CurrentUser Account account,Model model){
         model.addAttribute(new PasswordForm());
+        model.addAttribute(account);
 
         return "settings/password";
     }
     @PostMapping("/settings/password")
     public String changePassword(@CurrentUser Account account,Model model,@Valid @ModelAttribute PasswordForm passwordForm,
-                                 Errors errors){
+                                 Errors errors,RedirectAttributes redirectAttributes){
         if(errors.hasErrors()){
             model.addAttribute(account);
             return "settings/password";
         }
         settingsService.changePassword(account,passwordForm);
+        redirectAttributes.addFlashAttribute("message","비밀번호가 변경 되었습니다.");
         return "redirect:/profile/"+account.getNickname();
+    }
+
+    @GetMapping("/settings/notifications")
+    public String notificationsForm(@CurrentUser Account account,Model model){
+        NotificationsForm notificationsForm = modelMapper.map(account, NotificationsForm.class);
+        model.addAttribute(notificationsForm);
+        model.addAttribute(account);
+
+        return "settings/notifications";
     }
 }
