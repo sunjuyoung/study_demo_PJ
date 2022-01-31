@@ -86,4 +86,11 @@ public class SettingsController {
 
         return "settings/notifications";
     }
+    @PostMapping("/settings/notifications")
+    public String updateNotifications(@CurrentUser Account account,Model model,@ModelAttribute NotificationsForm notificationsForm,
+                                      RedirectAttributes redirectAttributes){
+        settingsService.updateNotifications(account,notificationsForm);
+        redirectAttributes.addFlashAttribute("message","알림 설정이 변경 되었습니다.");
+        return "redirect:/profile/"+account.getNickname();
+    }
 }
