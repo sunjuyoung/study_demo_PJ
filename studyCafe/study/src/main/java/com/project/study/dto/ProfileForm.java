@@ -2,10 +2,12 @@ package com.project.study.dto;
 
 import com.project.study.domain.Account;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Lob;
 
 @Data
+@NoArgsConstructor
 public class ProfileForm {
 
     private String bio;

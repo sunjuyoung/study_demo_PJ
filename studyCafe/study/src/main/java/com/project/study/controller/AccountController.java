@@ -1,15 +1,13 @@
 package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
-import com.project.study.config.SignUpFormValidation;
+import com.project.study.valid.SignUpFormValidation;
 import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
 import com.project.study.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Slf4j
 @Controller

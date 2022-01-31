@@ -1,4 +1,4 @@
-package com.project.study.config;
+package com.project.study.valid;
 
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
@@ -15,7 +15,7 @@ public class SignUpFormValidation implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return false;
+        return SignUpForm.class.isAssignableFrom(clazz);
     }
 
     @Override
