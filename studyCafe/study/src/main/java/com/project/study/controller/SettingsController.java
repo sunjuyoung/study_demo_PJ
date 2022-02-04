@@ -2,11 +2,13 @@ package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
+import com.project.study.dto.NicknameForm;
 import com.project.study.dto.NotificationsForm;
 import com.project.study.dto.PasswordForm;
 import com.project.study.dto.ProfileForm;
 import com.project.study.service.AccountService;
 import com.project.study.service.SettingsService;
+import com.project.study.valid.NicknameValidation;
 import com.project.study.valid.PasswordFormValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +33,18 @@ public class SettingsController {
     private final AccountService accountService;
     private final SettingsService settingsService;
     private final PasswordFormValidation passwordFormValidation;
+    private final NicknameValidation nicknameValidation;
     private final ModelMapper modelMapper;
 
 
     @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initBinderPassword(WebDataBinder webDataBinder){
         webDataBinder.addValidators(passwordFormValidation);
+    }
+
+    @InitBinder("nicknameForm")
+    public void initBinderNickname(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(nicknameValidation);
     }
 
     @GetMapping("/settings/profile")
@@ -91,6 +99,26 @@ public class SettingsController {
                                       RedirectAttributes redirectAttributes){
         settingsService.updateNotifications(account,notificationsForm);
         redirectAttributes.addFlashAttribute("message","알림 설정이 변경 되었습니다.");
+        return "redirect:/profile/"+account.getNickname();
+    }
+
+    @GetMapping("/settings/account")
+    public String nicknameForm(@CurrentUser Account account,Model model){
+        model.addAttribute(new NicknameForm());
+        model.addAttribute(account);
+
+        return "settings/account";
+    }
+
+    @PostMapping("/settings/account")
+    public String updateNickname(@CurrentUser Account account,Model model,RedirectAttributes redirectAttributes,
+                                 @Valid @ModelAttribute NicknameForm nicknameForm,Errors errors){
+        if(errors.hasErrors()){
+            model.addAttribute(account);
+            return "settings/account";
+        }
+        settingsService.updateNickname(account,nicknameForm);
+        redirectAttributes.addFlashAttribute("message","닉네임이 변경 되었습니다.");
         return "redirect:/profile/"+account.getNickname();
     }
 }

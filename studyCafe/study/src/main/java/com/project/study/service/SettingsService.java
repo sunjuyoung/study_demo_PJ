@@ -1,6 +1,7 @@
 package com.project.study.service;
 
 import com.project.study.domain.Account;
+import com.project.study.dto.NicknameForm;
 import com.project.study.dto.NotificationsForm;
 import com.project.study.dto.PasswordForm;
 import com.project.study.dto.ProfileForm;
@@ -38,6 +39,11 @@ public class SettingsService {
 
     public void updateNotifications(Account account, NotificationsForm notificationsForm) {
         modelMapper.map(notificationsForm,account);
+        accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account,NicknameForm nicknameForm) {
+        account.setNickname(nicknameForm.getNickname());
         accountRepository.save(account);
     }
 }

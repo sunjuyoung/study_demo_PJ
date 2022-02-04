@@ -16,11 +16,9 @@ import java.util.UUID;
 @Builder
 public class Account {
 
-
     @Id
     @GeneratedValue
     private Long id;
-
 
     @Column(unique = true)
     private String email;
@@ -55,7 +53,7 @@ public class Account {
     private boolean studyUpdatedByEmail;
 
     private LocalDateTime emailCheckAt;
-    private int countConfirmEmail;
+    private Integer countConfirmEmail;
 
     public void generateToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
@@ -65,6 +63,7 @@ public class Account {
     public void completeSignUp() {
         this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
+        this.countConfirmEmail = 0;
     }
 
     public boolean resendConfirmEmail() {

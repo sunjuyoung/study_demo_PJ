@@ -8,11 +8,13 @@ import com.project.study.repository.AccountRepository;
 import com.project.study.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dom4j.rule.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -99,6 +101,44 @@ public class AccountController {
         model.addAttribute("account",getAccount);
         model.addAttribute("isOwner",getAccount.equals(account));
         return "account/profile";
+    }
+
+    @GetMapping("/email-login")
+    public String emailLoginForm(@CurrentUser Account account,Model model){
+        return "account/email-login";
+    }
+
+    @PostMapping("/email-login")
+    public String submitEmailLogin(@ModelAttribute("email")String email, Model model, RedirectAttributes redirectAttributes){
+        Account account = accountRepository.findByEmail(email);
+        if(account == null){
+            model.addAttribute("message","해당 이메일은 존재 하지 않습니다.");
+            return "account/email-login";
+        }
+
+        if(!account.checkSendConfirmEmail()){
+            model.addAttribute("error","반복");
+            return "account/email-login";
+        }
+        accountService.sendLoginLink(account);
+        return "redirect:/email-login";
+    }
+
+    @GetMapping("/login-by-email")
+    public String loginByEmail(String token,String email,Model model){
+        Account account = accountRepository.findByEmail(email);
+        if(account==null){
+            model.addAttribute("error","wrong.email");
+            return "account/email-login";
+        }
+        if(!account.getEmailCheckToken().equals(token)){
+            model.addAttribute("error","wrong.token");
+            return "account/email-login";
+        }
+        accountService.login(account);
+
+        return "account/login-by-email";
+
     }
 
 }

@@ -87,4 +87,15 @@ public class AccountService implements UserDetailsService {
         return byNickname;
 
     }
+
+    public void sendLoginLink(Account account) {
+        account.generateToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("로그인 링크");
+        mailMessage.setText("/login-by-email?token="+account.getEmailCheckToken()+"&email="+account.getEmail());
+        javaMailSender.send(mailMessage);
+    }
+
+
 }

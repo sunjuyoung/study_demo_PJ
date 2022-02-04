@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.authorizeRequests().mvcMatchers("/","/login","sign-up",
+        http.authorizeRequests().mvcMatchers("/","/login","sign-up","login-by-email",
                "/check-email","/check-email-token","/email-login").permitAll()
                .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
                .anyRequest().authenticated();
