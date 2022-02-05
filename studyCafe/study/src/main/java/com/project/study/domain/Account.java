@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -40,6 +41,9 @@ public class Account {
 
     @Lob
     private String profileImage;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
 
     //알림

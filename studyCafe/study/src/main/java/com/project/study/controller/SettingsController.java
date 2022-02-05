@@ -121,4 +121,11 @@ public class SettingsController {
         redirectAttributes.addFlashAttribute("message","닉네임이 변경 되었습니다.");
         return "redirect:/profile/"+account.getNickname();
     }
+
+    @GetMapping("/settings/tags")
+    public String tagsForm(@CurrentUser Account account,Model model){
+
+
+        return "settings/tags";
+    }
 }
