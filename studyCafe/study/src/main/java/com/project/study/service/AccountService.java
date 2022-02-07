@@ -2,9 +2,11 @@ package com.project.study.service;
 
 import com.project.study.auth.UserAccount;
 import com.project.study.domain.Account;
+import com.project.study.domain.Tag;
 import com.project.study.dto.SignUpForm;
 import com.project.study.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -29,16 +33,19 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
-    public Account saveNewAccount( SignUpForm signUpForm) {
-        Account account = Account.builder()
+    public Account saveNewAccount(SignUpForm signUpForm) {
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+/*        Account account = Account.builder()
                 .email(signUpForm.getEmail())
                 .nickname(signUpForm.getNickname())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .studyCreatedByWeb(true)
                 .studyEnrollmentResultByWeb(true)
                 .studyUpdatedByWeb(true)
-                .build();
+                .build();*/
         account.generateToken();
         return accountRepository.save(account);
     }
@@ -98,4 +105,21 @@ public class AccountService implements UserDetailsService {
     }
 
 
+    public void addTag(Account account, Tag tag) {
+        //detach 연간관계 toMany 관계는 null 값, lazy로딩 불가능
+        Optional<Account> account1 = accountRepository.findById(account.getId());
+        account1.ifPresent(a -> a.getTags().add(tag));
+
+        //accountRepository.getOne() lazy로딩 이지만 detach라서 불가능
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> account1 = accountRepository.findById(account.getId());
+        return account1.orElseThrow().getTags();
+    }
+
+    public void removeTag(Account account, Tag tag) {
+        Optional<Account> account1 = accountRepository.findById(account.getId());
+        account1.ifPresent(a -> a.getTags().remove(tag));
+    }
 }

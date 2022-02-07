@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class Account {
     private String profileImage;
 
     @ManyToMany
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
 
     //알림

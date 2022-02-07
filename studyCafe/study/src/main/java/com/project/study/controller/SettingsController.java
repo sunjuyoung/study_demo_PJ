@@ -1,11 +1,12 @@
 package com.project.study.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
-import com.project.study.dto.NicknameForm;
-import com.project.study.dto.NotificationsForm;
-import com.project.study.dto.PasswordForm;
-import com.project.study.dto.ProfileForm;
+import com.project.study.domain.Tag;
+import com.project.study.dto.*;
+import com.project.study.repository.TagRepository;
 import com.project.study.service.AccountService;
 import com.project.study.service.SettingsService;
 import com.project.study.valid.NicknameValidation;
@@ -13,17 +14,18 @@ import com.project.study.valid.PasswordFormValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -35,6 +37,8 @@ public class SettingsController {
     private final PasswordFormValidation passwordFormValidation;
     private final NicknameValidation nicknameValidation;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
 
 
     @InitBinder("passwordForm")
@@ -67,6 +71,12 @@ public class SettingsController {
         return "redirect:/profile/"+account.getNickname();
     }
 
+    /**
+     * Password
+     * @param account
+     * @param model
+     * @return
+     */
     @GetMapping("/settings/password")
     public String profilePassword(@CurrentUser Account account,Model model){
         model.addAttribute(new PasswordForm());
@@ -86,6 +96,12 @@ public class SettingsController {
         return "redirect:/profile/"+account.getNickname();
     }
 
+    /**
+     * Notifications
+     * @param account
+     * @param model
+     * @return
+     */
     @GetMapping("/settings/notifications")
     public String notificationsForm(@CurrentUser Account account,Model model){
         NotificationsForm notificationsForm = modelMapper.map(account, NotificationsForm.class);
@@ -102,6 +118,12 @@ public class SettingsController {
         return "redirect:/profile/"+account.getNickname();
     }
 
+    /**
+     * NicName
+     * @param account
+     * @param model
+     * @return
+     */
     @GetMapping("/settings/account")
     public String nicknameForm(@CurrentUser Account account,Model model){
         model.addAttribute(new NicknameForm());
@@ -122,10 +144,38 @@ public class SettingsController {
         return "redirect:/profile/"+account.getNickname();
     }
 
+    /**
+     * Tag
+     * @param account
+     * @param model
+     * @return
+     */
     @GetMapping("/settings/tags")
-    public String tagsForm(@CurrentUser Account account,Model model){
+    public String tagsForm(@CurrentUser Account account,Model model) throws JsonProcessingException {
+        Set<Tag> tags = accountService.getTags(account);
+        List<String> collect = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
 
-
+        model.addAttribute(account);
+        model.addAttribute("tags",tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(collect));
         return "settings/tags";
+    }
+
+    @PostMapping("/settings/tags/add")
+    @ResponseBody
+    public ResponseEntity tagsAdd(@CurrentUser Account account, Model model, @RequestBody TagForm tagForm){
+        String title = tagForm.getTagTitle();
+         Tag tag = tagRepository.findByTitle(title).orElseGet(()->
+                 tagRepository.save(Tag.builder().title(title).build()));
+         accountService.addTag(account,tag);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/settings/tags/remove")
+    @ResponseBody
+    public ResponseEntity tagsRemove(@CurrentUser Account account, Model model, @RequestBody TagForm tagForm){
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title).orElseThrow();
+        accountService.removeTag(account,tag);
+        return ResponseEntity.ok().build();
     }
 }

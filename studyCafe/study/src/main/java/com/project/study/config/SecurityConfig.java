@@ -25,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        //http.csrf().ignoringAntMatchers("/settings/tags/**").disable();
         http.authorizeRequests().mvcMatchers("/","/login","sign-up","login-by-email",
                "/check-email","/check-email-token","/email-login").permitAll()
                .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
@@ -52,6 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .mvcMatchers("/node_modules/**")
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                ;
+
     }
 }

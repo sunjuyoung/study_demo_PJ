@@ -39,7 +39,7 @@
                         또는 엔터를 입력하세요.
                     </div>
                     <div id="whitelist" th:text="${whitelist}" hidden></div>
-                    <input name='tags-outside' class='tagify--outside'
+                    <input name='tags-outside' class='tagify--outside' th:value="${#strings.listJoin(tags,',')}"
                             aria-describedby="tagHelp"/>
                 </div>
             </div>
@@ -47,6 +47,7 @@
     </div>
 </div>
 <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+
 <script type="application/javascript">
         $(function () {
             function tagRequest(url,tagTitle) {
@@ -76,6 +77,7 @@
 
             var tagify = new Tagify(input, {
                 pattern : /^.{0,20}$/,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
                 dropdown: {
                     //position: "input",
                     enabled : 1 // always opens dropdown when input gets focus
@@ -90,7 +92,7 @@
 
         })
 </script>
-<!--<script th:replace="fragments.html :: ajax-csrf-header"></script>
-<script th:replace="fragments.html :: update-tags(baseUrl='/settings/tags')"></script>-->
+
+<!--<script th:replace="fragments.html :: update-tags(baseUrl='/settings/tags')"></script>-->
 </body>
 </html>
