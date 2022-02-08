@@ -46,6 +46,9 @@ public class Account {
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
+
 
     //알림
     private boolean studyCreatedByEmail; //스터디 개설

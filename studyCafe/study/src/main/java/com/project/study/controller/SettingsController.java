@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
 import com.project.study.domain.Tag;
+import com.project.study.domain.Zone;
 import com.project.study.dto.*;
 import com.project.study.repository.TagRepository;
+import com.project.study.repository.ZoneRepository;
 import com.project.study.service.AccountService;
 import com.project.study.service.SettingsService;
 import com.project.study.valid.NicknameValidation;
@@ -39,6 +41,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
+    private final ZoneRepository zoneRepository;
 
 
     @InitBinder("passwordForm")
@@ -176,6 +179,30 @@ public class SettingsController {
         String title = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(title).orElseThrow();
         accountService.removeTag(account,tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/settings/zones")
+    public String zoneForm(@CurrentUser Account account,Model model) throws JsonProcessingException {
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+
+        model.addAttribute(account);
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allZones));
+        return "settings/zones";
+    }
+
+    @PostMapping("/settings/zones/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, Model model, @RequestBody ZoneForm zoneForm){
+
+
+
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/settings/zones/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account, Model model, @RequestBody ZoneForm zoneForm){
+
         return ResponseEntity.ok().build();
     }
 }
