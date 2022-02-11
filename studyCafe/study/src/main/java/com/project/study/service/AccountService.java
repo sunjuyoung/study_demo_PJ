@@ -3,8 +3,11 @@ package com.project.study.service;
 import com.project.study.auth.UserAccount;
 import com.project.study.domain.Account;
 import com.project.study.domain.Tag;
+import com.project.study.domain.Zone;
 import com.project.study.dto.SignUpForm;
+import com.project.study.dto.ZoneForm;
 import com.project.study.repository.AccountRepository;
+import com.project.study.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -34,6 +37,7 @@ public class AccountService implements UserDetailsService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final ZoneRepository zoneRepository;
 
     public Account saveNewAccount(SignUpForm signUpForm) {
         signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
@@ -121,5 +125,24 @@ public class AccountService implements UserDetailsService {
     public void removeTag(Account account, Tag tag) {
         Optional<Account> account1 = accountRepository.findById(account.getId());
         account1.ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, ZoneForm zoneForm) {
+        Optional<Zone> byCity = zoneRepository.findByCity(zoneForm.getCityName());
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a->{
+            a.getZones().add(byCity.orElseThrow());
+        });
+    }
+
+    public void removeZone(Account account, ZoneForm zoneForm) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        Optional<Zone> zone = zoneRepository.findByCity(zoneForm.getCityName());
+        byId.ifPresent(a-> a.getZones().remove(zone.orElseThrow()));
     }
 }

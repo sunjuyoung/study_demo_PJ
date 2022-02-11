@@ -7,6 +7,7 @@ import com.project.study.domain.Account;
 import com.project.study.domain.Tag;
 import com.project.study.domain.Zone;
 import com.project.study.dto.*;
+import com.project.study.repository.AccountRepository;
 import com.project.study.repository.TagRepository;
 import com.project.study.repository.ZoneRepository;
 import com.project.study.service.AccountService;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 public class SettingsController {
 
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
     private final SettingsService settingsService;
     private final PasswordFormValidation passwordFormValidation;
     private final NicknameValidation nicknameValidation;
@@ -185,24 +187,25 @@ public class SettingsController {
     @GetMapping("/settings/zones")
     public String zoneForm(@CurrentUser Account account,Model model) throws JsonProcessingException {
         List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
-
+        Set<Zone> zones = accountService.getZones(account);
+        List<String> zonList = zones.stream().map(Zone::toString).collect(Collectors.toList());
         model.addAttribute(account);
+        model.addAttribute("zones",zonList);
         model.addAttribute("whitelist",objectMapper.writeValueAsString(allZones));
         return "settings/zones";
     }
 
     @PostMapping("/settings/zones/add")
     @ResponseBody
-    public ResponseEntity addZone(@CurrentUser Account account, Model model, @RequestBody ZoneForm zoneForm){
-
-
-
+    public ResponseEntity<String> addZone(@CurrentUser Account account, Model model, @RequestBody ZoneForm zoneForm){
+            accountService.addZone(account,zoneForm);
         return ResponseEntity.ok().build();
     }
     @PostMapping("/settings/zones/remove")
     @ResponseBody
     public ResponseEntity removeZone(@CurrentUser Account account, Model model, @RequestBody ZoneForm zoneForm){
 
+        accountService.removeZone(account,zoneForm);
         return ResponseEntity.ok().build();
     }
 }

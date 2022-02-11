@@ -27,7 +27,9 @@
                         또는 엔터를 입력하세요.
                     </div>
                     <div id="whitelist" th:text="${whitelist}" hidden></div>
-                    <input name='tags-manual-suggestions' placeholder='write some tags'>
+
+                    <input name='tags-manual-suggestions' placeholder='write some tags' th:value="${#strings.listJoin(zones,',')}">
+                    <small th:if="${message}">4개 이상 설정할 수 없습니다.</small>
                 </div>
             </div>
         </div>
@@ -46,7 +48,7 @@
                 },
                 contentType: "application/json; charset=utf-8",
                 method: "POST",
-                url: "/settings/tags"+url,
+                url: "/settings/zones"+url,
                 data: JSON.stringify({'zoneName': zoneName})
             }).done(function (data, status) {
                 console.log("${data} and status is ${status}");
