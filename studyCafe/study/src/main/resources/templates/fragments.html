@@ -10,22 +10,18 @@
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
-    <!--  <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css">-->
-    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script   src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script  src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
     <style>
         .container {
             max-width: 100%;
         }
-
-
-
     </style>
 </head>
 <nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
     <a class="navbar-brand" href="/" th:href="@{/}">
-        <img src="https://shared-comic.pstatic.net/thumb/webtoon/783054/thumbnail/thumbnail_IMAG06_4656dbaf-26ce-4aee-bde5-87a0b1714022.jpg" width="30" height="30">
+       <img src="https://shared-comic.pstatic.net/thumb/webtoon/783054/thumbnail/thumbnail_IMAG06_4656dbaf-26ce-4aee-bde5-87a0b1714022.jpg" width="30" height="30">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -248,7 +244,8 @@
 </div>
 
 <div th:fragment="editor-script">
-    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+
+    <script src="/node_modules/summernote/dist/summernote-bs5.js"></script>
     <script type="application/javascript">
         $(function () {
             $('.editor').summernote({

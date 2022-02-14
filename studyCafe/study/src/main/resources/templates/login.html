@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments.html :: head"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>Study</title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+    <script  src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script  src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script  src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+</head>
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
 <div class="container">
@@ -18,7 +25,7 @@
             </p>
         </div>
 
-        <form class="needs-validation col-sm-6" action="#" th:action="@{/login}" method="post" novalidate>
+        <form class="needs-validation col-sm-6"  th:action="@{/login}" method="post" >
             <div class="form-group">
                 <label for="username">이메일 또는 닉네임</label>
                 <input id="username" type="text" name="username" class="form-control"
@@ -53,8 +60,6 @@
         </form>
     </div>
 
-    <div th:replace="fragments.html :: footer"></div>
 </div>
-<!--<script th:replace="fragments.html :: form-validation"></script>-->
 </body>
 </html>

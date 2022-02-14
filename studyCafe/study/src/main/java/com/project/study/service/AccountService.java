@@ -170,4 +170,11 @@ public class AccountService implements UserDetailsService {
         Optional<Zone> zone = zoneRepository.findByCity(zoneForm.getCityName());
         byId.ifPresent(a-> a.getZones().remove(zone.orElseThrow()));
     }
+
+    public Account checkEmailToken(String email) {
+        Account account = accountRepository.findByEmail(email);
+        account.completeSignUp();
+        login(account);
+        return account;
+    }
 }

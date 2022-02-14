@@ -78,7 +78,7 @@ public class AccountController {
 
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token,String email,Model model){
-        Account account = accountRepository.findByEmail(email);
+        Account account = accountService.checkEmailToken(email);
         if(account==null){
              model.addAttribute("error","wrong.email");
             return "account/checked-email";
@@ -87,8 +87,6 @@ public class AccountController {
             model.addAttribute("error","wrong.token");
             return "account/checked-email";
         }
-        accountService.completeSignUp(account);
-
         model.addAttribute("nickname",account.getNickname());
         return "account/checked-email";
     }

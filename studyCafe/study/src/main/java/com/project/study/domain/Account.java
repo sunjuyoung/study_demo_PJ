@@ -71,7 +71,7 @@ public class Account {
     public void completeSignUp() {
         this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
-        this.countConfirmEmail = 0;
+        this.countConfirmEmail = 1;
     }
 
     public boolean resendConfirmEmail() {
@@ -79,14 +79,18 @@ public class Account {
     }
 
     public boolean checkSendConfirmEmail() {
-        if (this.countConfirmEmail >= 2) {
+        if (this.countConfirmEmail !=null &&this.countConfirmEmail >= 2) {
             if (resendConfirmEmail()) {
                 this.countConfirmEmail = 0;
             }
             this.emailCheckAt = LocalDateTime.now();
             return false;
         } else {
-            this.countConfirmEmail++;
+            if(this.countConfirmEmail == null){
+                this.countConfirmEmail =1;
+            }else {
+                this.countConfirmEmail++;
+            }
             return true;
         }
       //  return this.emailCheckAt.isBefore(LocalDateTime.now().minusMinutes(15));

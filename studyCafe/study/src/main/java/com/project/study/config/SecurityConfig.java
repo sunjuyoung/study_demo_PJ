@@ -26,9 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //http.csrf().ignoringAntMatchers("/settings/tags/**").disable();
-        http.authorizeRequests().mvcMatchers("/","/login","sign-up","login-by-email",
+        http.authorizeRequests().mvcMatchers("/","/login","/sign-up","/login-by-email","/resend-confirm-email",
                "/check-email","/check-email-token","/email-login").permitAll()
                .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
+                .antMatchers("/node_modules/**").permitAll()
                .anyRequest().authenticated();
 
         http.formLogin()
