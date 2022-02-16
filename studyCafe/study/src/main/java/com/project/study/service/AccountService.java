@@ -3,6 +3,7 @@ package com.project.study.service;
 import com.project.study.auth.UserAccount;
 import com.project.study.config.AppProperties;
 import com.project.study.domain.Account;
+import com.project.study.domain.Study;
 import com.project.study.domain.Tag;
 import com.project.study.domain.Zone;
 import com.project.study.dto.SignUpForm;
@@ -10,6 +11,7 @@ import com.project.study.dto.ZoneForm;
 import com.project.study.mail.EmailMessage;
 import com.project.study.mail.EmailService;
 import com.project.study.repository.AccountRepository;
+import com.project.study.repository.StudyRepository;
 import com.project.study.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,7 @@ public class AccountService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final ZoneRepository zoneRepository;
     private final TemplateEngine templateEngine;
-
+    private final StudyRepository studyRepository;
     private final AppProperties appProperties;
 
     public Account saveNewAccount(SignUpForm signUpForm) {
@@ -176,5 +178,14 @@ public class AccountService implements UserDetailsService {
         account.completeSignUp();
         login(account);
         return account;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Study> getStudyByAccount(Account account) {
+        List<Study> studyList = studyRepository.findAllByMembers(account);
+        if(studyList == null){
+            log.info("====================={}",account);
+        }
+        return studyList;
     }
 }

@@ -1,6 +1,7 @@
 package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
+import com.project.study.domain.Study;
 import com.project.study.valid.SignUpFormValidation;
 import com.project.study.domain.Account;
 import com.project.study.dto.SignUpForm;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -95,9 +97,11 @@ public class AccountController {
     @GetMapping("/profile/{nickname}")
     public String viewProfile(@PathVariable String nickname,Model model,@CurrentUser Account account){
         Account getAccount = accountService.getAccount(nickname);
+        List<Study> studyByAccount = accountService.getStudyByAccount(getAccount);
 
         model.addAttribute("account",getAccount);
         model.addAttribute("isOwner",getAccount.equals(account));
+        model.addAttribute("studyList",studyByAccount);
         return "account/profile";
     }
 

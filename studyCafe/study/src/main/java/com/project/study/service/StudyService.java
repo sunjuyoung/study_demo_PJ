@@ -25,6 +25,7 @@ public class StudyService {
         Study study = modelMapper.map(studyForm, Study.class);
         Study newStudy = studyRepository.save(study);
         newStudy.addManager(account);
+        newStudy.addMember(account);
         return newStudy.getPath();
     }
 
