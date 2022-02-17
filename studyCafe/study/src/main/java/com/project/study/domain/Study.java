@@ -8,6 +8,12 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "Study.withAllRelations", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers"),
+        @NamedAttributeNode("members"),
+})
 @Entity
 @Getter
 @Setter
@@ -60,7 +66,7 @@ public class Study {
     }
 
     public boolean isJoinable(UserAccount userAccount){
-        return this.published && this.recruiting;
+        return this.published && this.recruiting && !this.members.contains(userAccount) && !this.managers.contains(userAccount);
     }
     public boolean isMember(UserAccount userAccount){
         return this.members.contains(userAccount.getAccount());

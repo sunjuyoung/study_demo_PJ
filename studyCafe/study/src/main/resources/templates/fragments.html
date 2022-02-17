@@ -160,7 +160,7 @@
                        th:text="${study.members.size()}">1</a>
                 </span>
             <span sec:authorize="isAuthenticated()"
-                  th:if="${!study.closed && study.isMember(#authentication.principal)}" class="btn-group" role="group">
+                  th:if="${!study.closed && study.isMember(#authentication.principal) && !study.isManager(#authentication.principal)}" class="btn-group" role="group">
                     <a class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/leave'}">
                         스터디 탈퇴
                     </a>

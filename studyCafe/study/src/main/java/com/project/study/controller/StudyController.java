@@ -40,8 +40,6 @@ public class StudyController {
         return "study/createForm";
     }
 
-
-
     @PostMapping("/new-study")
     public String submitStudy(@CurrentUser Account account, Model model, @Valid @ModelAttribute StudyForm studyForm,
                               Errors errors, RedirectAttributes redirectAttributes){
@@ -58,5 +56,12 @@ public class StudyController {
         model.addAttribute("study", studyService.getStudy(path));
         model.addAttribute(account);
         return "study/view";
+    }
+
+    @GetMapping("/study/{path}/members")
+    public String studyMemberForm(@CurrentUser Account account, Model model, @PathVariable String path){
+        model.addAttribute("study", studyService.getStudy(path));
+        model.addAttribute(account);
+        return "study/members";
     }
 }
