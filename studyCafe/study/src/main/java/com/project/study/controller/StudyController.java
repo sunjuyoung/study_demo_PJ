@@ -2,6 +2,7 @@ package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
+import com.project.study.dto.StudyDescriptionForm;
 import com.project.study.dto.StudyForm;
 import com.project.study.service.StudyService;
 import com.project.study.valid.StudyFormValidation;
@@ -53,14 +54,39 @@ public class StudyController {
 
     @GetMapping("/study/{path}")
     public String studyForm(@CurrentUser Account account, Model model, @PathVariable String path){
-        model.addAttribute("study", studyService.getStudy(path));
+        model.addAttribute("study", studyService.getStudyByPath(path));
         model.addAttribute(account);
         return "study/view";
     }
 
     @GetMapping("/study/{path}/members")
     public String studyMemberForm(@CurrentUser Account account, Model model, @PathVariable String path){
-        model.addAttribute("study", studyService.getStudy(path));
+        model.addAttribute("study", studyService.getStudyByPath(path));
+        model.addAttribute(account);
+        return "study/members";
+    }
+    @GetMapping("/study/{path}/settings/description")
+    public String studySettingDescription(@CurrentUser Account account, Model model, @PathVariable String path){
+        model.addAttribute("studyDescriptionForm",new StudyDescriptionForm());
+        model.addAttribute("study", studyService.getStudyByPath(path));
+        model.addAttribute(account);
+        return "study/settings/description";
+    }
+    @GetMapping("/study/{path}/settings/banner")
+    public String studySettingBanner(@CurrentUser Account account, Model model, @PathVariable String path){
+        model.addAttribute("study", studyService.getStudyByPath(path));
+        model.addAttribute(account);
+        return "study/members";
+    }
+    @GetMapping("/study/{path}/settings/tag")
+    public String studySettingTag(@CurrentUser Account account, Model model, @PathVariable String path){
+        model.addAttribute("study", studyService.getStudyByPath(path));
+        model.addAttribute(account);
+        return "study/members";
+    }
+    @GetMapping("/study/{path}/settings/zone")
+    public String studySettingZone(@CurrentUser Account account, Model model, @PathVariable String path){
+        model.addAttribute("study", studyService.getStudyByPath(path));
         model.addAttribute(account);
         return "study/members";
     }

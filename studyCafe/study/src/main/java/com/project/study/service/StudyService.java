@@ -29,7 +29,7 @@ public class StudyService {
         return newStudy.getPath();
     }
 
-    public Study getStudy(String path) {
+    public Study getStudyByPath(String path) {
         Study study = studyRepository.findByPath(path).orElseThrow();
         return study;
     }
