@@ -2,6 +2,7 @@ package com.project.study.service;
 
 import com.project.study.domain.Account;
 import com.project.study.domain.Study;
+import com.project.study.dto.StudyDescriptionForm;
 import com.project.study.dto.StudyForm;
 import com.project.study.repository.AccountRepository;
 import com.project.study.repository.StudyRepository;
@@ -32,5 +33,12 @@ public class StudyService {
     public Study getStudyByPath(String path) {
         Study study = studyRepository.findByPath(path).orElseThrow();
         return study;
+    }
+
+    public Study updateStudyDescription(StudyDescriptionForm studyDescriptionForm, String path) {
+        Study study = studyRepository.findByPath(path).orElseThrow();
+        modelMapper.map(studyDescriptionForm,study);
+        Study saveStudy = studyRepository.save(study);
+        return saveStudy;
     }
 }
