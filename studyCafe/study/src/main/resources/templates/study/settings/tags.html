@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head">
+    <style>
+        .tagify--outside{
+            border: 0;
+        }
+
+        .tagify--outside .tagify__input{
+            order: -1;
+            flex: 100%;
+            border: 1px solid var(--tags-border-color);
+            margin-bottom: 1em;
+            transition: .1s;
+        }
+
+        .tagify--outside .tagify__input:hover{ border-color:var(--tags-hover-border-color); }
+        .tagify--outside.tagify--focus .tagify__input{
+            transition:0s;
+            border-color: var(--tags-focus-border-color);
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div th:replace="fragments.html :: study-banner"></div>
+<div class="container">
+    <div th:replace="fragments.html :: study-info"></div>
+    <div th:replace="fragments.html :: study-menu(studyMenu='settings')"></div>
+    <div class="row mt-3 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: study-settings-menu(currentMenu='tags')"></div>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <h2 class="col-sm-12">스터디 주제</h2>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-info" role="alert">
+                        스터디에서 주로 다루는 주제를 태그로 등록하세요. 태그를 입력하고 콤마(,) 또는 엔터를 입력하세요.
+                    </div>
+                    <div id="tagPath" th:text="${study.path}" hidden></div>
+                    <div id="whitelist" th:text="${whitelist}" hidden></div>
+                    <input name='tags-outside' class='tagify--outside' th:value="${#strings.listJoin(tags,',')}"
+                           aria-describedby="tagHelp"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+<script type="application/javascript">
+    $(function () {
+        function tagRequest(url,tagTitle) {
+            var tagPath = document.getElementById("tagPath").textContent;
+
+            $.ajax({
+                dataType:"json",
+                autocomplete:{
+                    enabled: true,
+                    rightKey: true,
+                },
+
+                contentType : "application/json; charset=utf-8",
+                method: "POST",
+                url : "/study/"+tagPath+"/settings/tags"+url,
+                data: JSON.stringify({'tagTitle':tagTitle})
+            }).done(function (data,status) {
+                console.log("${data} and status is ${status}}")
+
+            })
+        }
+
+        function onAdd(e) {
+            tagRequest("/add",e.detail.data.value);
+        }
+        function onRemove(e) {
+            tagRequest("/remove",e.detail.data.value);
+        }
+        var input = document.querySelector('input[name=tags-outside]');
+
+        var tagify = new Tagify(input, {
+            pattern : /^.{0,20}$/,
+            whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+            dropdown: {
+                //position: "input",
+                enabled : 1 // always opens dropdown when input gets focus
+            }
+        });
+
+        tagify.on("add",onAdd);
+        tagify.on("remove",onRemove);
+
+        tagify.DOM.input.classList.add('form-control');
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input,tagify.DOM.scope);
+
+    });
+
+</script>
+
+</body>
+</html>

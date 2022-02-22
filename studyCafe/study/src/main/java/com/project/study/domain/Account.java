@@ -95,4 +95,8 @@ public class Account {
         }
       //  return this.emailCheckAt.isBefore(LocalDateTime.now().minusMinutes(15));
     }
+
+    public boolean isManager(Study study){
+        return study.getManagers().contains(this);
+    }
 }
