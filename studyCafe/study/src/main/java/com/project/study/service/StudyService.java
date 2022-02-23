@@ -3,6 +3,7 @@ package com.project.study.service;
 import com.project.study.domain.Account;
 import com.project.study.domain.Study;
 import com.project.study.domain.Tag;
+import com.project.study.domain.Zone;
 import com.project.study.dto.StudyDescriptionForm;
 import com.project.study.dto.StudyForm;
 import com.project.study.dto.TagForm;
@@ -12,6 +13,7 @@ import com.project.study.repository.StudyRepository;
 import com.project.study.repository.TagRepository;
 import com.project.study.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -71,6 +74,23 @@ public class StudyService {
     public Study addZones(Account account, ZoneForm zoneForm, String path) {
         Study study = getStudyByPath(path);
         mangerCheck(account, study);
+        Optional<Zone> byCity = zoneRepository.findByCity(zoneForm.getCityName());
+        byCity.ifPresent(i->study.getZones().add(i));
         return study;
+    }
+
+    public Study removeTags(Account account, TagForm tagForm, String path) {
+        Study studyByPath = getStudyByPath(path);
+        mangerCheck(account,studyByPath);
+        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle()).orElseThrow();
+        studyByPath.getTags().remove(tag);
+        return studyByPath;
+    }
+
+    public Study publishStudy(Account account, String path) {
+        Study studyByPath = getStudyByPath(path);
+        mangerCheck(account,studyByPath);
+        studyByPath.StudyPublish();
+        return studyByPath;
     }
 }

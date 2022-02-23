@@ -143,6 +143,15 @@ public class StudyController {
         model.addAttribute(account);
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/study/{path}/settings/tags/remove")
+    @ResponseBody
+    public ResponseEntity removeStudyTag(@CurrentUser Account account, Model model, @PathVariable String path,
+                                         @RequestBody TagForm tagTitle){
+        Study study = studyService.removeTags(account, tagTitle, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return ResponseEntity.ok().build();
+    }
 
     /**
      * zones
@@ -150,8 +159,10 @@ public class StudyController {
     @GetMapping("/study/{path}/settings/zones")
     public String studySettingZone(@CurrentUser Account account, Model model, @PathVariable String path) throws JsonProcessingException {
         List<String> zoneList = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
-        model.addAttribute("study", studyService.getStudyByPath(path));
+        Study studyByPath = studyService.getStudyByPath(path);
+        model.addAttribute("study",studyByPath );
         model.addAttribute("whitelist",objectMapper.writeValueAsString(zoneList));
+        model.addAttribute("zones",studyByPath.getZones().stream().map(Zone::toString).collect(Collectors.toList()));
         model.addAttribute(account);
         return "study/settings/zones";
     }
@@ -159,11 +170,60 @@ public class StudyController {
     @PostMapping("/study/{path}/settings/zones/add")
     @ResponseBody
     public ResponseEntity updateStudyZone(@CurrentUser Account account, Model model, @PathVariable String path,
-                                          @RequestBody ZoneForm zoneTitle){
+                                          @RequestBody ZoneForm zoneName){
+        Study study = studyService.addZones(account, zoneName, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return ResponseEntity.ok().build();
+    }
 
+    @PostMapping("/study/{path}/settings/zones/remove")
+    @ResponseBody
+    public ResponseEntity removeStudyZone(@CurrentUser Account account, Model model, @PathVariable String path,
+                                          @RequestBody ZoneForm zoneTitle){
         Study study = studyService.addZones(account, zoneTitle, path);
         model.addAttribute("study", studyService.getStudyByPath(path));
         model.addAttribute(account);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Study
+     */
+    @GetMapping("/study/{path}/settings/study")
+    public String studySettingStudy(@CurrentUser Account account, Model model, @PathVariable String path) {
+        model.addAttribute("study", studyService.getStudyByPath(path));
+        model.addAttribute(account);
+        return "study/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/publish")
+    public String publishStudy(@CurrentUser Account account, Model model, @PathVariable String path) {
+        Study study = studyService.publishStudy(account, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return "study/settings/study";
+    }
+    @PostMapping("/study/{path}/settings/study/close")
+    public String closeStudy(@CurrentUser Account account, Model model, @PathVariable String path) {
+        Study study = studyService.publishStudy(account, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return "study/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/recruit/start")
+    public String recruitStart(@CurrentUser Account account, Model model, @PathVariable String path) {
+        Study study = studyService.publishStudy(account, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return "study/settings/study";
+    }
+    @PostMapping("/study/{path}/settings/study/recruit/stop")
+    public String recruitStop(@CurrentUser Account account, Model model, @PathVariable String path) {
+        Study study = studyService.publishStudy(account, path);
+        model.addAttribute("study", study);
+        model.addAttribute(account);
+        return "study/settings/study";
     }
 }
