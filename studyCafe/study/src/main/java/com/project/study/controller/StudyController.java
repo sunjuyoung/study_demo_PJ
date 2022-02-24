@@ -212,14 +212,14 @@ public class StudyController {
         return "study/settings/study";
     }
 
-    @PostMapping("/study/{path}/settings/study/recruit/start")
+    @PostMapping("/study/{path}/settings/recruit/start")
     public String recruitStart(@CurrentUser Account account, Model model, @PathVariable String path) {
-        Study study = studyService.publishStudy(account, path);
+        Study study = studyService.updateStudyRecruitStatus(account, path);
         model.addAttribute("study", study);
         model.addAttribute(account);
         return "study/settings/study";
     }
-    @PostMapping("/study/{path}/settings/study/recruit/stop")
+    @PostMapping("/study/{path}/settings/recruit/stop")
     public String recruitStop(@CurrentUser Account account, Model model, @PathVariable String path) {
         Study study = studyService.publishStudy(account, path);
         model.addAttribute("study", study);

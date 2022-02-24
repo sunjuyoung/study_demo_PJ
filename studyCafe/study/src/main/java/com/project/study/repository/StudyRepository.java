@@ -20,4 +20,6 @@ public interface StudyRepository extends JpaRepository<Study,Long>{
     Optional<Study> findByPath(String path);
 
     List<Study> findAllByMembers(Account account);
+
+
 }

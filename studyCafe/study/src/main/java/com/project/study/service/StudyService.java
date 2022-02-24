@@ -93,4 +93,10 @@ public class StudyService {
         studyByPath.StudyPublish();
         return studyByPath;
     }
+
+    public Study updateStudyRecruitStatus(Account account, String path) {
+        Study studyByPath = getStudyByPath(path);
+        studyByPath.recruitStart();
+        return studyByPath;
+    }
 }

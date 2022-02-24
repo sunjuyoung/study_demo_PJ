@@ -83,9 +83,34 @@ public class Study {
         return closed;
     }
     public void StudyPublish(){
-        this.published = true;
+        if(!this.closed && !this.published){
+            this.published = true;
+        }else {
+            throw new RuntimeException("스터디를 공개할 수 없습니다.");
+        }
+
     }
     public void studyClose(){
+        if(this.published && !this.closed){
+            this.closed = true;
+        }else{
+            throw new RuntimeException("스터디를 종료할 수 없습니다.");
+        }
+    }
+    public void recruitStart(){
+        if(this.published && !this.closed){
+            this.recruiting = true;
+            this.recruitedUpdateDateTime = LocalDateTime.now();
+        }else{
+            throw new RuntimeException("스터디모집을 시작할 수 없습니다.");
+        }
 
+    }
+    public void recruitStop(){
+        this.recruiting = false;
+    }
+
+    public boolean canUpdateRecruiting(){
+        return this.recruitedUpdateDateTime.isBefore(LocalDateTime.now().minusHours(1));
     }
 }
