@@ -182,10 +182,7 @@ public class AccountService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<Study> getStudyByAccount(Account account) {
-        List<Study> studyList = studyRepository.findAllByMembers(account);
-        if(studyList == null){
-            log.info("====================={}",account);
-        }
+        List<Study> studyList = studyRepository.findByMembers(account);
         return studyList;
     }
 }

@@ -125,7 +125,7 @@ public class StudyController {
      */
     @GetMapping("/study/{path}/settings/tags")
     public String studySettingTag(@CurrentUser Account account, Model model, @PathVariable String path) throws JsonProcessingException {
-        Study studyByPath = studyService.getStudyByPath(path);
+        Study studyByPath = studyService.getStudyTagByPath(path);
         List<String> tagList =  tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
         model.addAttribute("study",studyByPath);
         model.addAttribute("tags",studyByPath.getTags().stream().map(Tag::getTitle).collect(Collectors.toList()));

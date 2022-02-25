@@ -19,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -98,5 +99,10 @@ public class StudyService {
         Study studyByPath = getStudyByPath(path);
         studyByPath.recruitStart();
         return studyByPath;
+    }
+
+    public Study getStudyTagByPath(String path) {
+        Study study = studyRepository.findStudyWithTagsAndManagersByPath(path);
+        return study;
     }
 }

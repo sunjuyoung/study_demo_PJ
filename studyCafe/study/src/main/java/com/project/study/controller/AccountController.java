@@ -98,10 +98,11 @@ public class AccountController {
     public String viewProfile(@PathVariable String nickname,Model model,@CurrentUser Account account){
         Account getAccount = accountService.getAccount(nickname);
         List<Study> studyByAccount = accountService.getStudyByAccount(getAccount);
-
+        if(studyByAccount !=null){
+            model.addAttribute("studyList",studyByAccount);
+        }
         model.addAttribute("account",getAccount);
         model.addAttribute("isOwner",getAccount.equals(account));
-        model.addAttribute("studyList",studyByAccount);
         return "account/profile";
     }
 
