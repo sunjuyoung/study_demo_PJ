@@ -73,7 +73,7 @@ public class StudyService {
     }
 
     public Study addZones(Account account, ZoneForm zoneForm, String path) {
-        Study study = getStudyByPath(path);
+        Study study = studyRepository.findStudyWithZonesAndManagersByPath(path);
         mangerCheck(account, study);
         Optional<Zone> byCity = zoneRepository.findByCity(zoneForm.getCityName());
         byCity.ifPresent(i->study.getZones().add(i));
@@ -81,7 +81,7 @@ public class StudyService {
     }
 
     public Study removeTags(Account account, TagForm tagForm, String path) {
-        Study studyByPath = getStudyByPath(path);
+        Study studyByPath = studyRepository.findStudyWithTagsAndManagersByPath(path);
         mangerCheck(account,studyByPath);
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle()).orElseThrow();
         studyByPath.getTags().remove(tag);
@@ -102,7 +102,29 @@ public class StudyService {
     }
 
     public Study getStudyTagByPath(String path) {
-        Study study = studyRepository.findStudyWithTagsAndManagersByPath(path);
+        Study study = getStudyByPath(path);
         return study;
+    }
+
+    public Study removeZones(Account account, ZoneForm zoneTitle, String path) {
+        Study study = studyRepository.findStudyWithZonesAndManagersByPath(path);
+        mangerCheck(account, study);
+        Optional<Zone> byCity = zoneRepository.findByCity(zoneTitle.getCityName());
+        byCity.ifPresent(i->study.getZones().remove(i));
+        return study;
+    }
+
+    public Study getStudyUpdateStatus(Account account, String path) {
+        Study studyWithManagersByPath = studyRepository.findStudyWithManagersByPath(path);
+        mangerCheck(account, studyWithManagersByPath);
+        return studyWithManagersByPath;
+    }
+
+    public void remove(Study studyUpdateStatus) {
+        if(studyUpdateStatus.isRemovable()){
+            studyRepository.delete(studyUpdateStatus);
+        }else{
+            throw new IllegalArgumentException("스터디를 삭제할 수 없습니다");
+        }
     }
 }

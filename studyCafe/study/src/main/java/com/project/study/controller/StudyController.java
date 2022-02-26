@@ -181,8 +181,8 @@ public class StudyController {
     @ResponseBody
     public ResponseEntity removeStudyZone(@CurrentUser Account account, Model model, @PathVariable String path,
                                           @RequestBody ZoneForm zoneTitle){
-        Study study = studyService.addZones(account, zoneTitle, path);
-        model.addAttribute("study", studyService.getStudyByPath(path));
+        Study study = studyService.removeZones(account, zoneTitle, path);
+        model.addAttribute("study", study);
         model.addAttribute(account);
         return ResponseEntity.ok().build();
     }
@@ -226,4 +226,12 @@ public class StudyController {
         model.addAttribute(account);
         return "study/settings/study";
     }
+
+    @PostMapping("/study/{path}/settings/study/remove")
+    public String removeStudy(@CurrentUser Account account, @PathVariable String path,Model model){
+        Study studyUpdateStatus = studyService.getStudyUpdateStatus(account, path);
+        studyService.remove(studyUpdateStatus);
+
+    }
+
 }

@@ -80,7 +80,7 @@ public class Study {
     }
 
     public boolean isRemovable(){
-        return closed;
+        return !this.published;
     }
     public void StudyPublish(){
         if(!this.closed && !this.published){
