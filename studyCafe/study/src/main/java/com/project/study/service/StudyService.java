@@ -88,16 +88,31 @@ public class StudyService {
         return studyByPath;
     }
 
+    /**
+     * 스터디 시작,종료
+     */
     public Study publishStudy(Account account, String path) {
-        Study studyByPath = getStudyByPath(path);
-        mangerCheck(account,studyByPath);
-        studyByPath.StudyPublish();
+        Study studyByPath = getStudyUpdateStatus(account,path);
+        studyByPath.studyPublish();
+        return studyByPath;
+    }
+    public Study closeStudy(Account account, String path) {
+        Study studyByPath = getStudyUpdateStatus(account,path);
+        studyByPath.studyClose();
         return studyByPath;
     }
 
+    /**
+     * 스터디 모집
+     */
     public Study updateStudyRecruitStatus(Account account, String path) {
-        Study studyByPath = getStudyByPath(path);
+        Study studyByPath = getStudyUpdateStatus(account,path);
         studyByPath.recruitStart();
+        return studyByPath;
+    }
+    public Study stopStudyRecruitStatus(Account account, String path) {
+        Study studyByPath = getStudyUpdateStatus(account,path);
+        studyByPath.recruitStop();
         return studyByPath;
     }
 
@@ -114,17 +129,18 @@ public class StudyService {
         return study;
     }
 
-    public Study getStudyUpdateStatus(Account account, String path) {
-        Study studyWithManagersByPath = studyRepository.findStudyWithManagersByPath(path);
-        mangerCheck(account, studyWithManagersByPath);
-        return studyWithManagersByPath;
-    }
-
     public void remove(Study studyUpdateStatus) {
         if(studyUpdateStatus.isRemovable()){
             studyRepository.delete(studyUpdateStatus);
         }else{
             throw new IllegalArgumentException("스터디를 삭제할 수 없습니다");
         }
+    }
+
+
+    public Study getStudyUpdateStatus(Account account, String path) {
+        Study studyWithManagersByPath = studyRepository.findStudyWithManagersByPath(path);
+        mangerCheck(account, studyWithManagersByPath);
+        return studyWithManagersByPath;
     }
 }

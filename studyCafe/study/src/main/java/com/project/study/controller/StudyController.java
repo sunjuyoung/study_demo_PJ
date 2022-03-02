@@ -206,7 +206,7 @@ public class StudyController {
     }
     @PostMapping("/study/{path}/settings/study/close")
     public String closeStudy(@CurrentUser Account account, Model model, @PathVariable String path) {
-        Study study = studyService.publishStudy(account, path);
+        Study study = studyService.closeStudy(account, path);
         model.addAttribute("study", study);
         model.addAttribute(account);
         return "study/settings/study";
@@ -221,7 +221,7 @@ public class StudyController {
     }
     @PostMapping("/study/{path}/settings/recruit/stop")
     public String recruitStop(@CurrentUser Account account, Model model, @PathVariable String path) {
-        Study study = studyService.publishStudy(account, path);
+        Study study = studyService.stopStudyRecruitStatus(account, path);
         model.addAttribute("study", study);
         model.addAttribute(account);
         return "study/settings/study";
@@ -230,8 +230,20 @@ public class StudyController {
     @PostMapping("/study/{path}/settings/study/remove")
     public String removeStudy(@CurrentUser Account account, @PathVariable String path,Model model){
         Study studyUpdateStatus = studyService.getStudyUpdateStatus(account, path);
-        studyService.remove(studyUpdateStatus);
+            studyService.remove(studyUpdateStatus);
+            return "redirect:/";
+    }
 
+    @GetMapping("/study/{path}/join")
+    public String joinStudy(@CurrentUser Account account, @PathVariable String path,Model model){
+
+        return "redirect:/study/"+URLEncoder.encode(path, StandardCharsets.UTF_8);
+
+    }
+    @GetMapping("/study/{path}/leave")
+    public String leaveStudy(@CurrentUser Account account, @PathVariable String path,Model model){
+
+        return "redirect:/study/"+URLEncoder.encode(path, StandardCharsets.UTF_8);
     }
 
 }
