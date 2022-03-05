@@ -99,4 +99,7 @@ public class Account {
     public boolean isManager(Study study){
         return study.getManagers().contains(this);
     }
+    public boolean isMembers(Study study){
+        return study.getMembers().contains(this);
+    }
 }

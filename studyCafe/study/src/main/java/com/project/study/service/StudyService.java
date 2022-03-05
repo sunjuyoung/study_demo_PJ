@@ -137,10 +137,25 @@ public class StudyService {
         }
     }
 
-
     public Study getStudyUpdateStatus(Account account, String path) {
         Study studyWithManagersByPath = studyRepository.findStudyWithManagersByPath(path);
         mangerCheck(account, studyWithManagersByPath);
         return studyWithManagersByPath;
+    }
+
+    public Study joinStudy(Account account, String path) {
+        Study study = studyRepository.findStudyWithMembersByPath(path);
+        if(!account.isMembers(study)){
+            study.addMember(account);
+        }
+        return study;
+    }
+
+    public Study leaveStudy(Account account, String path) {
+        Study study = studyRepository.findStudyWithMembersByPath(path);
+        if(account.isMembers(study) && !account.isManager(study)){
+            study.removeMember(account);
+        }
+        return study;
     }
 }

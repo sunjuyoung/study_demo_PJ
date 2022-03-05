@@ -64,9 +64,12 @@ public class Study {
     public void addManager(Account account) {
         this.managers.add(account);
     }
+    public void removeManager(Account account) {
+        this.managers.remove(account);
+    }
 
     public boolean isJoinable(UserAccount userAccount){
-        return this.published && this.recruiting && !this.members.contains(userAccount) && !this.managers.contains(userAccount);
+        return this.published && this.recruiting && !this.members.contains(userAccount.getAccount());
     }
     public boolean isMember(UserAccount userAccount){
         return this.members.contains(userAccount.getAccount());
@@ -77,6 +80,9 @@ public class Study {
 
     public void addMember(Account account) {
         this.members.add(account);
+    }
+    public void removeMember(Account account) {
+        this.members.remove(account);
     }
 
     public boolean isRemovable(){

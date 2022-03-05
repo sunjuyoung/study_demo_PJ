@@ -236,13 +236,13 @@ public class StudyController {
 
     @GetMapping("/study/{path}/join")
     public String joinStudy(@CurrentUser Account account, @PathVariable String path,Model model){
-
-        return "redirect:/study/"+URLEncoder.encode(path, StandardCharsets.UTF_8);
+         Study study = studyService.joinStudy(account,path);
+        return "redirect:/study/"+URLEncoder.encode(path, StandardCharsets.UTF_8)+"/members";
 
     }
     @GetMapping("/study/{path}/leave")
     public String leaveStudy(@CurrentUser Account account, @PathVariable String path,Model model){
-
+        Study study = studyService.leaveStudy(account,path);
         return "redirect:/study/"+URLEncoder.encode(path, StandardCharsets.UTF_8);
     }
 
