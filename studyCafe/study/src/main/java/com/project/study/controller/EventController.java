@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -29,6 +30,19 @@ public class EventController {
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(new EventForm());
+
+        return "event/form";
+    }
+    @PostMapping("/new-event")
+    public String submitEvent(@CurrentUser Account account, @PathVariable String path, Model model,
+                              @Valid @ModelAttribute EventForm eventForm , Errors errors){
+        Study study = studyService.getStudyUpdateStatus(account, path);
+        if(errors.hasErrors()){
+            model.addAttribute(study);
+            model.addAttribute(account);
+            return "event/form";
+        }
+        eventService.createEvent(study,eventForm);
 
         return "event/form";
     }
