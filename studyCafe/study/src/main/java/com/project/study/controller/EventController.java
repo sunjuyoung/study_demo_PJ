@@ -2,6 +2,7 @@ package com.project.study.controller;
 
 import com.project.study.auth.CurrentUser;
 import com.project.study.domain.Account;
+import com.project.study.domain.Event;
 import com.project.study.domain.Study;
 import com.project.study.dto.EventForm;
 import com.project.study.service.EventService;
@@ -42,9 +43,11 @@ public class EventController {
             model.addAttribute(account);
             return "event/form";
         }
-        eventService.createEvent(study,eventForm);
+        Event event = eventService.createEvent(study, eventForm, account);
+        model.addAttribute(event);
 
-        return "event/form";
+
+        return "event/view";
     }
 
 }
