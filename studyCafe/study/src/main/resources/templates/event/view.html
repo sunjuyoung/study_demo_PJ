@@ -5,7 +5,6 @@
 <head th:replace="fragments.html :: head"></head>
 <body>
 <nav th:replace="fragments.html :: main-nav"></nav>
-<div th:replace="fragments.html :: study-banner"></div>
 <div class="container">
     <div class="row py-4 text-left justify-content-center bg-light">
         <div class="col-6">
@@ -165,12 +164,12 @@
 
             <dt class="font-weight-light">모임장</dt>
             <dd>
-                <a th:href="@{'/profile/' + ${event.createdBy?.nickname}}" class="text-decoration-none">
-                    <svg th:if="${#strings.isEmpty(event.createdBy?.profileImage)}"
-                         th:data-jdenticon-value="${event.createdBy?.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
-                    <img th:if="${!#strings.isEmpty(event.createdBy?.profileImage)}"
-                         th:src="${event.createdBy?.profileImage}" width="24" height="24" class="rounded border"/>
-                    <span th:text="${event.createdBy?.nickname}"></span>
+                <a th:href="@{'/profile/' + ${event.createBy?.nickname}}" class="text-decoration-none">
+                    <svg th:if="${#strings.isEmpty(event.createBy?.profileImage)}"
+                         th:data-jdenticon-value="${event.createBy?.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
+                    <img th:if="${!#strings.isEmpty(event.createBy?.profileImage)}"
+                         th:src="${event.createBy?.profileImage}" width="24" height="24" class="rounded border"/>
+                    <span th:text="${event.createBy?.nickname}"></span>
                 </a>
             </dd>
 

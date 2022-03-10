@@ -7,14 +7,18 @@ import com.project.study.domain.Study;
 import com.project.study.dto.EventForm;
 import com.project.study.service.EventService;
 import com.project.study.service.StudyService;
+import com.project.study.valid.EventValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Controller
@@ -24,6 +28,12 @@ public class EventController {
 
     private final EventService eventService;
     private final StudyService studyService;
+    private final EventValidator eventValidator;
+
+    @InitBinder("eventForm")
+    public void initBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(eventValidator);
+    }
 
     @GetMapping("/new-event")
     public String eventForm(@CurrentUser Account account, @PathVariable String path, Model model){
@@ -45,9 +55,10 @@ public class EventController {
         }
         Event event = eventService.createEvent(study, eventForm, account);
         model.addAttribute(event);
+        model.addAttribute(study);
 
 
-        return "event/view";
+        return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+event.getId();
     }
 
 }
