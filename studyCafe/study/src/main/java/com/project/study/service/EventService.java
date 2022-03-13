@@ -5,6 +5,7 @@ import com.project.study.domain.Event;
 import com.project.study.domain.Study;
 import com.project.study.dto.EventForm;
 import com.project.study.repository.EventRepository;
+import com.project.study.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
 
     public Event createEvent(Study study, EventForm eventForm, Account account){
@@ -28,7 +31,15 @@ public class EventService {
         event.setStudy(study);
         event.setCreatedDateTime(LocalDateTime.now());
         return eventRepository.save(event);
+    }
 
+    public Event getEvent(Study study, Long id, Account account) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        return event;
+    }
 
+    public List<Event>  findEventsByStudy(Study study, Account account) {
+        List<Event> events = eventRepository.findEventsByStudyOrderBysOrderByStartDateTime(study);
+        return events;
     }
 }

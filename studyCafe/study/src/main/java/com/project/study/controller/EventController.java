@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -56,9 +59,36 @@ public class EventController {
         Event event = eventService.createEvent(study, eventForm, account);
         model.addAttribute(event);
         model.addAttribute(study);
-
-
         return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+event.getId();
+    }
+
+    @GetMapping("/events/{id}")
+    public String getEvent(@CurrentUser Account account,@PathVariable String path, @PathVariable Long id,Model model){
+        Study study = studyService.getStudyUpdateStatus(account, path);
+        Event event = eventService.getEvent(study, id, account);
+        model.addAttribute(event);
+        model.addAttribute(study);
+        model.addAttribute(account);
+        return "event/view";
+    }
+
+    @GetMapping("/events")
+    public String getStudyEvents(@CurrentUser Account account,@PathVariable String path,Model model){
+        Study study = studyService.getStudyUpdateStatus(account, path);
+        List<Event> eventsByStudy = eventService.findEventsByStudy(study, account);
+        List<Event> oldEvent = new ArrayList<>();
+        List<Event> newEvent = new ArrayList<>();
+
+        eventsByStudy.forEach(i->{
+            if(i.getEndDateTime().isBefore(LocalDateTime.now())){
+                oldEvent.add(i);
+            }else{
+                newEvent.add(i);
+            }
+        });
+        model.addAttribute("oldEvents",oldEvent);
+        model.addAttribute("newEvents",newEvent);
+        return "study/events";
     }
 
 }

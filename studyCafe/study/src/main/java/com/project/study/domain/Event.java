@@ -49,7 +49,8 @@ public class Event {
 
 
     public boolean isEnrollableFor(UserAccount userAccount){
-        return !createBy.equals(userAccount) && enrollments.stream().filter(i->i.getAccount().equals(userAccount)).count() >0;
+
+        return !createBy.equals(userAccount.getAccount()) && isAlreadyEnrolled(userAccount) && isNotClosed();
 
     }
     public boolean isDisenrollableFor(UserAccount userAccount){
@@ -60,5 +61,14 @@ public class Event {
     }
 
 
+    //모임에 참가중
+    public boolean isAlreadyEnrolled(UserAccount userAccount){
+        Account account = userAccount.getAccount();
+        return enrollments.stream().filter(i->i.getAccount().equals(account)).count() >0;
+    }
+    //모임 중인지 마감일 확인
+    public boolean isNotClosed(){
+        return endEnrollmentDateTime.isAfter(LocalDateTime.now());
+    }
 
 }
