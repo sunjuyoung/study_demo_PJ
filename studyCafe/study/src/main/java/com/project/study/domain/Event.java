@@ -71,4 +71,8 @@ public class Event {
         return endEnrollmentDateTime.isAfter(LocalDateTime.now());
     }
 
+    public int numberOfRemainSpots(){
+        return limitOfEnrollment - (int) enrollments.stream().filter(i->i.isAccepted()).count();
+    }
+
 }

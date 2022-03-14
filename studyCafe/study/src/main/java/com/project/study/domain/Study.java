@@ -69,7 +69,8 @@ public class Study {
     }
 
     public boolean isJoinable(UserAccount userAccount){
-        return this.published && this.recruiting && !this.members.contains(userAccount.getAccount());
+        Account account = userAccount.getAccount();
+        return this.published && this.recruiting && !this.members.contains(account);
     }
     public boolean isMember(UserAccount userAccount){
         return this.members.contains(userAccount.getAccount());

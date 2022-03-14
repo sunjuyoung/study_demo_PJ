@@ -39,7 +39,7 @@ public class EventService {
     }
 
     public List<Event>  findEventsByStudy(Study study, Account account) {
-        List<Event> events = eventRepository.findEventsByStudyOrderBysOrderByStartDateTime(study);
+        List<Event> events = eventRepository.findEventWithEnrollmentsByStudy(study);
         return events;
     }
 }

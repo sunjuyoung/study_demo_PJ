@@ -10,6 +10,7 @@ import com.project.study.service.StudyService;
 import com.project.study.valid.EventValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -32,6 +33,7 @@ public class EventController {
     private final EventService eventService;
     private final StudyService studyService;
     private final EventValidator eventValidator;
+    private final ModelMapper modelMapper;
 
     @InitBinder("eventForm")
     public void initBinder(WebDataBinder webDataBinder){
@@ -74,7 +76,7 @@ public class EventController {
 
     @GetMapping("/events")
     public String getStudyEvents(@CurrentUser Account account,@PathVariable String path,Model model){
-        Study study = studyService.getStudyUpdateStatus(account, path);
+        Study study = studyService.getStudyByPath(path);
         List<Event> eventsByStudy = eventService.findEventsByStudy(study, account);
         List<Event> oldEvent = new ArrayList<>();
         List<Event> newEvent = new ArrayList<>();
@@ -86,9 +88,26 @@ public class EventController {
                 newEvent.add(i);
             }
         });
+        model.addAttribute(account);
+        model.addAttribute(study);
         model.addAttribute("oldEvents",oldEvent);
         model.addAttribute("newEvents",newEvent);
         return "study/events";
     }
+
+    @GetMapping("/events/{id}/edit")
+    public String updateEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model){
+        Study study = studyService.getStudyByPath(path);
+        Event event = eventService.getEvent(study, id, account);
+
+        EventForm eventForm = modelMapper.map(event, EventForm.class);
+
+        model.addAttribute(eventForm);
+        model.addAttribute(event);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "event/update-form";
+    }
+
 
 }

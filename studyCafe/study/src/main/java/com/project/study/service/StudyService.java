@@ -144,15 +144,19 @@ public class StudyService {
     }
 
     public Study joinStudy(Account account, String path) {
-        Study study = studyRepository.findStudyWithMembersByPath(path);
+        Study study = getStudyWithMember(path);
         if(!account.isMembers(study)){
             study.addMember(account);
         }
         return study;
     }
 
+    public Study getStudyWithMember(String path) {
+        return studyRepository.findStudyWithMembersByPath(path);
+    }
+
     public Study leaveStudy(Account account, String path) {
-        Study study = studyRepository.findStudyWithMembersByPath(path);
+        Study study = getStudyWithMember(path);
         if(account.isMembers(study) && !account.isManager(study)){
             study.removeMember(account);
         }
