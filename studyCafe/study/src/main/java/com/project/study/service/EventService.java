@@ -33,13 +33,24 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event getEvent(Study study, Long id, Account account) {
+    public Event getEvent(Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
         return event;
     }
 
-    public List<Event>  findEventsByStudy(Study study, Account account) {
+    public List<Event>  findEventsByStudy(Study study) {
         List<Event> events = eventRepository.findEventWithEnrollmentsByStudy(study);
         return events;
     }
+
+    public Event updateEvent(EventForm eventForm, Long id) {
+        Event event = getEvent(id);
+        event.setTitle(eventForm.getTitle());
+        event.setDescription(eventForm.getDescription());
+        event.setEndEnrollmentDateTime(eventForm.getEndEnrollmentDateTime());
+        event.setStartDateTime(eventForm.getStartDateTime());
+        return event;
+    }
+
+
 }

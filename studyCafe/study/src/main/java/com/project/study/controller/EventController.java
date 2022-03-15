@@ -67,7 +67,7 @@ public class EventController {
     @GetMapping("/events/{id}")
     public String getEvent(@CurrentUser Account account,@PathVariable String path, @PathVariable Long id,Model model){
         Study study = studyService.getStudyUpdateStatus(account, path);
-        Event event = eventService.getEvent(study, id, account);
+        Event event = eventService.getEvent(id);
         model.addAttribute(event);
         model.addAttribute(study);
         model.addAttribute(account);
@@ -77,7 +77,7 @@ public class EventController {
     @GetMapping("/events")
     public String getStudyEvents(@CurrentUser Account account,@PathVariable String path,Model model){
         Study study = studyService.getStudyByPath(path);
-        List<Event> eventsByStudy = eventService.findEventsByStudy(study, account);
+        List<Event> eventsByStudy = eventService.findEventsByStudy(study);
         List<Event> oldEvent = new ArrayList<>();
         List<Event> newEvent = new ArrayList<>();
 
@@ -96,9 +96,9 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}/edit")
-    public String updateEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model){
+    public String updateEventForm(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model){
         Study study = studyService.getStudyByPath(path);
-        Event event = eventService.getEvent(study, id, account);
+        Event event = eventService.getEvent(id);
 
         EventForm eventForm = modelMapper.map(event, EventForm.class);
 
@@ -109,5 +109,23 @@ public class EventController {
         return "event/update-form";
     }
 
+    @PostMapping("/events/{id}/edit")
+    public String updateEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model,
+                              @Valid @ModelAttribute EventForm eventForm, Errors errors){
+        Study study = studyService.getStudyByPath(path);
+        Event event = eventService.updateEvent(eventForm, id);
+        eventValidator.validateUpdateForm(eventForm,event,errors);
+        if(errors.hasErrors()){
+            model.addAttribute(event);
+            model.addAttribute(account);
+            model.addAttribute(study);
+            return "event/update-form";
+        }
+
+        model.addAttribute(event);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+event.getId();
+    }
 
 }
