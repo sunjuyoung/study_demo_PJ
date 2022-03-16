@@ -66,7 +66,7 @@ public class StudyService {
         return study;
     }
 
-    private void mangerCheck(Account account, Study study) {
+    public void mangerCheck(Account account, Study study) {
         if (!account.isManager(study)) {
             throw new AccessDeniedException("권한이 없습니다.");
         }

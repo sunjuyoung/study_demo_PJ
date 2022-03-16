@@ -128,4 +128,12 @@ public class EventController {
         return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+event.getId();
     }
 
+    @DeleteMapping("/events/{id}")
+    public String cancelEvent(@CurrentUser Account account,@PathVariable String path,@PathVariable Long id){
+        Study study = studyService.getStudyByPath(path);
+        studyService.mangerCheck(account,study);
+        eventService.deleteEvent(id);
+        return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/";
+    }
+
 }

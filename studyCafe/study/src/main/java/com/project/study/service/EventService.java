@@ -53,4 +53,8 @@ public class EventService {
     }
 
 
+    public void deleteEvent(Long id) {
+        Event event = getEvent(id);
+        eventRepository.delete(event);
+    }
 }
