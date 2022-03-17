@@ -5,6 +5,7 @@ import com.project.study.domain.Account;
 import com.project.study.domain.Event;
 import com.project.study.domain.Study;
 import com.project.study.dto.EventForm;
+import com.project.study.repository.StudyRepository;
 import com.project.study.service.EventService;
 import com.project.study.service.StudyService;
 import com.project.study.valid.EventValidator;
@@ -34,6 +35,7 @@ public class EventController {
     private final StudyService studyService;
     private final EventValidator eventValidator;
     private final ModelMapper modelMapper;
+    private final StudyRepository studyRepository;
 
     @InitBinder("eventForm")
     public void initBinder(WebDataBinder webDataBinder){
@@ -42,7 +44,7 @@ public class EventController {
 
     @GetMapping("/new-event")
     public String eventForm(@CurrentUser Account account, @PathVariable String path, Model model){
-        Study study = studyService.getStudyUpdateStatus(account, path);
+        Study study = studyRepository.findStudyWithMembersAndManagersByPath(path);
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(new EventForm());
@@ -52,7 +54,7 @@ public class EventController {
     @PostMapping("/new-event")
     public String submitEvent(@CurrentUser Account account, @PathVariable String path, Model model,
                               @Valid @ModelAttribute EventForm eventForm , Errors errors){
-        Study study = studyService.getStudyUpdateStatus(account, path);
+        Study study = studyRepository.findStudyWithMembersAndManagersByPath(path);
         if(errors.hasErrors()){
             model.addAttribute(study);
             model.addAttribute(account);
@@ -66,7 +68,7 @@ public class EventController {
 
     @GetMapping("/events/{id}")
     public String getEvent(@CurrentUser Account account,@PathVariable String path, @PathVariable Long id,Model model){
-        Study study = studyService.getStudyUpdateStatus(account, path);
+        Study study = studyRepository.findByPath(path).orElseThrow();
         Event event = eventService.getEvent(id);
         model.addAttribute(event);
         model.addAttribute(study);
@@ -76,7 +78,7 @@ public class EventController {
 
     @GetMapping("/events")
     public String getStudyEvents(@CurrentUser Account account,@PathVariable String path,Model model){
-        Study study = studyService.getStudyByPath(path);
+        Study study = studyRepository.findByPath(path).orElseThrow();
         List<Event> eventsByStudy = eventService.findEventsByStudy(study);
         List<Event> oldEvent = new ArrayList<>();
         List<Event> newEvent = new ArrayList<>();

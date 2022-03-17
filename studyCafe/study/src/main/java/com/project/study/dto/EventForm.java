@@ -30,7 +30,7 @@ public class EventForm {
 
 
     @Min(2)
-    private Integer limitOfEnrollments = 2;
+    private Integer limitOfEnrollment = 2;
 
 
 }

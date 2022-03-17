@@ -35,7 +35,7 @@ public class EventValidator implements Validator {
 
 
     public void validateUpdateForm(EventForm eventForm, Event event,Errors errors){
-        if(eventForm.getLimitOfEnrollments() < event.getLimitOfEnrollment()){
+        if(eventForm.getLimitOfEnrollment() < event.getLimitOfEnrollment()){
             errors.rejectValue("limitOfEnrollment","wrong.value","기존 모집 인원 수 보다 커야 합니다.");
         }
     }

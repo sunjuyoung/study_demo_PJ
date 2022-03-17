@@ -49,21 +49,19 @@ public class Event {
 
 
     public boolean isEnrollableFor(UserAccount userAccount){
-
-        return !createBy.equals(userAccount.getAccount()) && isAlreadyEnrolled(userAccount) && isNotClosed();
+        Account account = userAccount.getAccount();
+        return !createBy.equals(account) && isAlreadyEnrolled(account) && isNotClosed();
 
     }
     public boolean isDisenrollableFor(UserAccount userAccount){
-        return createBy.equals(userAccount);
+        return createBy.equals(userAccount.getAccount());
     }
     public boolean isAttended(UserAccount userAccount){
-        return createBy.equals(userAccount);
+        return createBy.equals(userAccount.getAccount());
     }
 
-
     //모임에 참가중
-    public boolean isAlreadyEnrolled(UserAccount userAccount){
-        Account account = userAccount.getAccount();
+    public boolean isAlreadyEnrolled(Account account){
         return enrollments.stream().filter(i->i.getAccount().equals(account)).count() >0;
     }
     //모임 중인지 마감일 확인
@@ -75,4 +73,15 @@ public class Event {
         return limitOfEnrollment - (int) enrollments.stream().filter(i->i.isAccepted()).count();
     }
 
+    public boolean canAccept(Enrollment enrollment){
+        return this.eventType == EventType.CONFIRM
+                && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended();
+    }
+
+    public boolean canReject(Enrollment enrollment){
+        return this.eventType == EventType.CONFIRM
+                && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended();
+    }
 }

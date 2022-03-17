@@ -30,4 +30,11 @@ public class Enrollment {
     private boolean attended;
 
 
+    public void newEvent(Account account,Event event) {
+        this.account = account;
+        this.event = event;
+        this.enrolledAt = LocalDateTime.now();
+        this.accepted = true;
+        this.attended = true;
+    }
 }
