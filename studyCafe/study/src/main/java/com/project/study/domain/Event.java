@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter @Setter
@@ -49,14 +50,22 @@ public class Event {
 
 
     public boolean isEnrollableFor(UserAccount userAccount){
-        Account account = userAccount.getAccount();
-        return !createBy.equals(account) && isAlreadyEnrolled(account) && isNotClosed();
+        return !createBy.equals(userAccount.getAccount()) && !isAlreadyEnrolled(userAccount.getAccount()) && isNotClosed();
 
     }
     public boolean isDisenrollableFor(UserAccount userAccount){
-        return createBy.equals(userAccount.getAccount());
+        return !createBy.equals(userAccount.getAccount()) && isNotClosed() && isAttended(userAccount);
     }
     public boolean isAttended(UserAccount userAccount){
+        Optional<Enrollment> en = this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount())).filter(Enrollment::isAttended).findFirst();
+            if(en.isPresent()){
+                return en.get().isAttended();
+            }else {
+                return false;
+            }
+    }
+
+    public boolean isEventManager(UserAccount userAccount){
         return createBy.equals(userAccount.getAccount());
     }
 
@@ -83,5 +92,10 @@ public class Event {
         return this.eventType == EventType.CONFIRM
                 && this.enrollments.contains(enrollment)
                 && !enrollment.isAttended();
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+        enrollment.setEvent(this);
     }
 }

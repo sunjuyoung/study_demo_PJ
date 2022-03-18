@@ -36,7 +36,7 @@ public class EventService {
         Enrollment enrollment = new Enrollment();
         enrollment.newEvent(account,event);
         enrollmentRepository.save(enrollment);
-        event.getEnrollments().add(enrollment);
+        event.addEnrollment(enrollment);
         return eventRepository.save(event);
     }
 
