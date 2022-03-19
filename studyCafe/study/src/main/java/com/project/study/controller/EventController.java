@@ -141,15 +141,20 @@ public class EventController {
     @PostMapping("/events/{id}/enroll")
     public String submitEnroll(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model){
         Study study = studyService.getStudyByPath(path);
-        Event event = eventService.getEvent(id);
+        eventService.newEnrollment(account,id);
 
-        EventForm eventForm = modelMapper.map(event, EventForm.class);
-
-        model.addAttribute(eventForm);
-        model.addAttribute(event);
         model.addAttribute(account);
         model.addAttribute(study);
-        return "event/update-form";
+        return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+id;
+    }
+    @PostMapping("/events/{id}/disenroll")
+    public String submitDisEnroll(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,Model model){
+        Study study = studyService.getStudyByPath(path);
+        eventService.cancelEnrollment(id,account);
+
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+id;
     }
 
 }

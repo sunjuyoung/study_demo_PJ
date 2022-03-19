@@ -1,9 +1,6 @@
 package com.project.study.service;
 
-import com.project.study.domain.Account;
-import com.project.study.domain.Enrollment;
-import com.project.study.domain.Event;
-import com.project.study.domain.Study;
+import com.project.study.domain.*;
 import com.project.study.dto.EventForm;
 import com.project.study.repository.EnrollmentRepository;
 import com.project.study.repository.EventRepository;
@@ -34,7 +31,7 @@ public class EventService {
         event.setStudy(study);
         event.setCreatedDateTime(LocalDateTime.now());
         Enrollment enrollment = new Enrollment();
-        enrollment.newEvent(account,event);
+        enrollment.newEvent(account);
         enrollmentRepository.save(enrollment);
         event.addEnrollment(enrollment);
         return eventRepository.save(event);
@@ -65,5 +62,27 @@ public class EventService {
     public void deleteEvent(Long id) {
         Event event = getEvent(id);
         eventRepository.delete(event);
+    }
+
+    public void newEnrollment(Account account, Long id) {
+        Event event = getEvent(id);
+        if(!event.getCreateBy().equals(account) && !enrollmentRepository.existsByEventAndAccount(event,account)){
+            Enrollment enrollment = new Enrollment();
+            enrollment.newEnrollment(account);
+            enrollment.setAccepted(event.isAbleToAcceptEnrollment());
+            event.addEnrollment(enrollment);
+            enrollmentRepository.save(enrollment);
+        }
+    }
+
+
+    public void cancelEnrollment(Long id, Account account) {
+        Event event = getEvent(id);
+        Enrollment enrollment = enrollmentRepository.findByEventAndAccount(event,account);
+        event.removeEnrollment(enrollment);
+        enrollmentRepository.delete(enrollment);
+        if(event.isAbleToAcceptEnrollment()){
+
+        }
     }
 }

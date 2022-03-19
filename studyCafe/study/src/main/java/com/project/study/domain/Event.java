@@ -69,6 +69,10 @@ public class Event {
         return createBy.equals(userAccount.getAccount());
     }
 
+    public boolean isAbleToAcceptEnrollment(){
+        return this.eventType == EventType.FCFS && numberOfRemainSpots() >0;
+    }
+
     //모임에 참가중
     public boolean isAlreadyEnrolled(Account account){
         return enrollments.stream().filter(i->i.getAccount().equals(account)).count() >0;
@@ -97,5 +101,10 @@ public class Event {
     public void addEnrollment(Enrollment enrollment) {
         this.enrollments.add(enrollment);
         enrollment.setEvent(this);
+    }
+
+    public void removeEnrollment(Enrollment enrollment) {
+        this.enrollments.remove(enrollment);
+        enrollment.setEvent(null);
     }
 }
