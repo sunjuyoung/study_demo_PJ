@@ -81,8 +81,12 @@ public class EventService {
         Enrollment enrollment = enrollmentRepository.findByEventAndAccount(event,account);
         event.removeEnrollment(enrollment);
         enrollmentRepository.delete(enrollment);
+        //선착순일때 대기중인 첫번째 신청자 수락 
         if(event.isAbleToAcceptEnrollment()){
-
+            Enrollment firstWaitingEnroll =  event.getFirstWaitingEnrollment();
+            if(firstWaitingEnroll !=null){
+                firstWaitingEnroll.setAccepted(true);
+            }
         }
     }
 }

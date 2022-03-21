@@ -54,7 +54,7 @@ public class Event {
 
     }
     public boolean isDisenrollableFor(UserAccount userAccount){
-        return !createBy.equals(userAccount.getAccount()) && isNotClosed() && isAttended(userAccount);
+        return !createBy.equals(userAccount.getAccount()) && isNotClosed() && isAccepted(userAccount);
     }
     public boolean isAttended(UserAccount userAccount){
         Optional<Enrollment> en = this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount())).filter(Enrollment::isAttended).findFirst();
@@ -63,6 +63,10 @@ public class Event {
             }else {
                 return false;
             }
+    }
+    public boolean isAccepted(UserAccount userAccount){
+        Optional<Enrollment> en =  this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount())).filter(Enrollment::isAccepted).findFirst();
+        return en.get().isAccepted();
     }
 
     public boolean isEventManager(UserAccount userAccount){
@@ -106,5 +110,15 @@ public class Event {
     public void removeEnrollment(Enrollment enrollment) {
         this.enrollments.remove(enrollment);
         enrollment.setEvent(null);
+    }
+
+
+    public Enrollment getFirstWaitingEnrollment(){
+        for(Enrollment e : this.enrollments){
+            if(!e.isAccepted()){
+                return e;
+            }
+        }
+        return null;
     }
 }

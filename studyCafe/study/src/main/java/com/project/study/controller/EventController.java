@@ -143,8 +143,6 @@ public class EventController {
         Study study = studyService.getStudyByPath(path);
         eventService.newEnrollment(account,id);
 
-        model.addAttribute(account);
-        model.addAttribute(study);
         return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+id;
     }
     @PostMapping("/events/{id}/disenroll")
@@ -152,8 +150,6 @@ public class EventController {
         Study study = studyService.getStudyByPath(path);
         eventService.cancelEnrollment(id,account);
 
-        model.addAttribute(account);
-        model.addAttribute(study);
         return "redirect:/study/"+ URLEncoder.encode(path, StandardCharsets.UTF_8)+"/events/"+id;
     }
 
