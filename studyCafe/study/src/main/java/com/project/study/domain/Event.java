@@ -57,7 +57,8 @@ public class Event {
         return !createBy.equals(userAccount.getAccount()) && isNotClosed() && isAccepted(userAccount);
     }
     public boolean isAttended(UserAccount userAccount){
-        Optional<Enrollment> en = this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount())).filter(Enrollment::isAttended).findFirst();
+        Optional<Enrollment> en = this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount()))
+                .filter(Enrollment::isAttended).findFirst();
             if(en.isPresent()){
                 return en.get().isAttended();
             }else {
@@ -65,8 +66,12 @@ public class Event {
             }
     }
     public boolean isAccepted(UserAccount userAccount){
-        Optional<Enrollment> en =  this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount())).filter(Enrollment::isAccepted).findFirst();
-        return en.get().isAccepted();
+        Optional<Enrollment> en =  this.enrollments.stream().filter(i->i.getAccount().equals(userAccount.getAccount()))
+                .filter(Enrollment::isAccepted).findFirst();
+        if(en.isPresent()){
+            return en.get().isAccepted();
+        }
+        return false;
     }
 
     public boolean isEventManager(UserAccount userAccount){

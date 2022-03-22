@@ -1,6 +1,8 @@
 package com.project.study.controller;
 
 import com.project.study.domain.Account;
+import com.project.study.infra.AbstractContainerBaseTest;
+import com.project.study.infra.MockMvcTest;
 import com.project.study.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -17,10 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Slf4j
-@SpringBootTest
-@AutoConfigureMockMvc
-class AccountControllerTest {
+
+@MockMvcTest
+class AccountControllerTest extends AbstractContainerBaseTest {
+
 
     @Autowired
     MockMvc mockMvc;
