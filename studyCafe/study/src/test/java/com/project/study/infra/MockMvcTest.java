@@ -11,7 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Slf4j
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ActiveProfiles("test")
