@@ -43,7 +43,6 @@ public class StudyService {
         Study newStudy = studyRepository.save(study);
         newStudy.addManager(account);
         newStudy.addMember(account);
-        eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
         return newStudy.getPath();
     }
 
@@ -99,6 +98,7 @@ public class StudyService {
     public Study publishStudy(Account account, String path) {
         Study studyByPath = getStudyUpdateStatus(account,path);
         studyByPath.studyPublish();
+        eventPublisher.publishEvent(new StudyCreatedEvent(studyByPath));
         return studyByPath;
     }
     public Study closeStudy(Account account, String path) {

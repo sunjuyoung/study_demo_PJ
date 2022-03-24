@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly=true)
-public interface StudyRepository extends JpaRepository<Study,Long>{
+public interface StudyRepository extends JpaRepository<Study,Long> {
 
     boolean existsByPath(String path);
 
@@ -36,4 +36,6 @@ public interface StudyRepository extends JpaRepository<Study,Long>{
     @EntityGraph(attributePaths = {"members","managers"})
     Study findStudyWithMembersAndManagersByPath(String path);
 
+    @EntityGraph(attributePaths = {"tags","zones"})
+    Study findStudyWithZonesAndTagsById(Long id);
 }
