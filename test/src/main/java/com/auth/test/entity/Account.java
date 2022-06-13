@@ -11,6 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
+@Builder
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
