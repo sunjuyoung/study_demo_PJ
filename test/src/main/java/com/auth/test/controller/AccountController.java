@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AccountController {
 
 
-    private final AccountService accountService;
+/*    private final AccountService accountService;
 
     @GetMapping("/")
     public String home(@CurrentUser Account account,Model model){
@@ -37,7 +37,7 @@ public class AccountController {
     @PostMapping("/signUp")
     public String signUp(Model model, @ModelAttribute SignUpForm signUpForm){
         Account account = accountService.saveNewAccount(signUpForm);
-        accountService.login(account);
+
         return "redirect:/";
     }
 
@@ -46,5 +46,5 @@ public class AccountController {
     public String login(Model model){
         model.addAttribute(new LoginDTO());
         return "login";
-    }
+    }*/
 }

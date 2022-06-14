@@ -1,11 +1,13 @@
 package com.auth.test.service;
 
 import com.auth.test.auth.UserAccount;
+import com.auth.test.dto.LoginDTO;
 import com.auth.test.dto.SignUpForm;
 import com.auth.test.entity.Account;
 import com.auth.test.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,7 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Transactional
     public Account saveNewAccount(SignUpForm signUpForm) {
@@ -48,13 +51,24 @@ public class AccountService implements UserDetailsService {
         return new UserAccount(account);
     }
 
-    public void login(Account newAccount) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new UserAccount(newAccount),   //principle
-                newAccount.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-        );
 
-        SecurityContextHolder.getContext().setAuthentication(token);
+    public Account apiCreate(SignUpForm signUpForm) {
+        Account account = modelMapper.map(signUpForm, Account.class);
+        if(accountRepository.existsByEmail(account.getEmail())){
+            throw new RuntimeException("email already exist");
+        }
+        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        return accountRepository.save(account);
+
+    }
+
+    public Account getUser(LoginDTO loginDTO) {
+        Account account = accountRepository.findByNickname(loginDTO.getNickname());
+
+        if(account !=null && passwordEncoder.matches(loginDTO.getPassword(),account.getPassword())){
+            return account;
+        }
+        return  null;
+
     }
 }
