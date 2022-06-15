@@ -31,6 +31,10 @@ public class AccountService implements UserDetailsService {
 
     @Transactional
     public Account saveNewAccount(SignUpForm signUpForm) {
+        Account byNickname = accountRepository.findByNickname(signUpForm.getNickname());
+        if(byNickname !=null){
+            throw new IllegalStateException("이미 가입된 회원입니다");
+        }
         Account account = Account.builder()
                 .email(signUpForm.getEmail())
                 .nickname(signUpForm.getNickname())

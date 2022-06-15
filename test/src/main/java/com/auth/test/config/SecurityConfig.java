@@ -22,28 +22,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
 
-        http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
-                .httpBasic()
-                .disable()//token 사용하므로 basic인증 disable
-                .sessionManagement()//session 기반이 아님 설정
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/","/api/**","/signUp").permitAll()
-                .anyRequest()
-                .authenticated();
-/*
+
 
         http.csrf().disable();
         http.authorizeRequests().mvcMatchers("/login","/signUp").permitAll()
                 .anyRequest().authenticated();
 
         http.formLogin().loginPage("/login").permitAll();
-*/
+
 
     }
 }
