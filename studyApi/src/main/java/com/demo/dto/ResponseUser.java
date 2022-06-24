@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class ResponseUser {
 
 
+
     private String email;
     private String nickname;
 

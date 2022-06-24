@@ -1,12 +1,16 @@
 package com.demo.service;
 
 import com.demo.domain.Account;
+import com.demo.domain.Role;
 import com.demo.dto.ResponseUser;
 import com.demo.dto.SignUpDTO;
 import com.demo.repo.AccountRepository;
+import com.demo.repo.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,17 +29,18 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
 
     @Override
     public ResponseUser getUser(String nickname) {
         Account account = accountRepository.findByNickname(nickname);
-        if(account == null){
-            throw new UsernameNotFoundException("user not found");
-        }
+        ValidUser(account);
         ResponseUser responseUser = modelMapper.map(account, ResponseUser.class);
-        return null;
+        return responseUser;
     }
+
+
 
     @Override
     public List<ResponseUser> findAllUsers() {
@@ -57,7 +62,31 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
+    public void addRoleToUser(String username, String roleName) {
+        Account account = accountRepository.findByNickname(username);
+        ValidUser(account);
+        Role role = roleRepository.findByName(roleName);
+        account.getRoles().add(role);
+    }
+
+    @Override
+    public Role saveRole(Role role) {
+        return roleRepository.save(role);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        Account account = accountRepository.findByNickname(username);
+        ValidUser(account);
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        account.getRoles().forEach(role -> roles.add(new SimpleGrantedAuthority(role.getName())) );
+        return new User(account.getNickname(),account.getPassword(),
+                true,true,true,true,roles);
+    }
+
+    public void ValidUser(Account account) {
+        if(account == null){
+            throw new UsernameNotFoundException("user not found");
+        }
     }
 }

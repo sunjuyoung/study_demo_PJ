@@ -12,7 +12,6 @@ public class SignUpDTO {
 
     @NotBlank
     @Length(min = 3,max = 20)
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9]{3,20}$",message = "3~20자의 영문 소문자,숫자를 입력해주세요, 특수 기호는 불가능합니다.")
     private String nickname;
 
     @NotBlank
@@ -22,4 +21,11 @@ public class SignUpDTO {
     @Email
     @NotBlank
     private String email;
+
+
+    public SignUpDTO( String nickname, String password, String email) {
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+    }
 }

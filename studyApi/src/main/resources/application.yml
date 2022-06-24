@@ -11,3 +11,13 @@ spring:
       hibernate:
         format_sql: true
       show_sql: true
+logging:
+  level:
+    com.demo.service: debug
+    com.demo.security: debug
+
+
+
+token:
+  expiration_time: 43200000
+  secret: secret_s

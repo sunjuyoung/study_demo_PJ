@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -33,5 +35,9 @@ public class Account {
     private String url;
     private String occupation;
     private String location;
+
+
+    @ManyToMany
+    private List<Role> roles = new ArrayList<>();
 
 }
