@@ -41,12 +41,12 @@ public class AccountServiceImpl implements AccountService{
     }
 
 
-
     @Override
     public List<ResponseUser> findAllUsers() {
         List<Account> accounts = accountRepository.findAll();
+        log.info(String.valueOf(accounts.size()));
         List<ResponseUser> responseUsers = new ArrayList<>();
-        accounts.stream().map(account -> responseUsers.add(modelMapper.map(account,ResponseUser.class)));
+        accounts.stream().forEach(account -> responseUsers.add(modelMapper.map(account,ResponseUser.class)));
         return responseUsers;
     }
 

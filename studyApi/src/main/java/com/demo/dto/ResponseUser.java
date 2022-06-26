@@ -1,9 +1,12 @@
 package com.demo.dto;
 
+import com.demo.domain.Role;
 import lombok.Data;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ResponseUser {
@@ -23,5 +26,6 @@ public class ResponseUser {
     private String url;
     private String occupation;
     private String location;
+    private List<Role> roles = new ArrayList<>();
 
 }
