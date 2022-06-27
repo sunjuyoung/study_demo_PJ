@@ -11,12 +11,29 @@ spring:
       hibernate:
         format_sql: true
       show_sql: true
+  #############mail##########
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: syseoz@gmail.com
+    password: zmhklhpmtxzpcfiy
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          starttls:
+            enable: true
 logging:
   level:
     com.demo.service: debug
     com.demo.security: debug
 
 
+
+app:
+  host: http://localhost:8080
 
 token:
   expiration_time: 43200000

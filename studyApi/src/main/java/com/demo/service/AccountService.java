@@ -15,7 +15,10 @@ public interface AccountService extends UserDetailsService {
     List<ResponseUser> findAllUsers();
     ResponseUser saveUser(SignUpDTO signUpDTO);
 
+
     void addRoleToUser(String username, String roleName);
 
     Role saveRole(Role role);
+
+    void checkEmailToken(String token, String email);
 }

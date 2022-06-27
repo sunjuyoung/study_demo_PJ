@@ -29,7 +29,7 @@ public class DemoApplication {
             accountService.saveRole(new Role(null,"ROLE_USER"));
             accountService.saveRole(new Role(null,"ROLE_ADMIN"));
 
-            accountService.saveUser(new SignUpDTO("sun","1234","test@test.com"));
+            accountService.saveUser(new SignUpDTO("sun","1234","syseoz@gmail.com"));
             accountService.saveUser(new SignUpDTO("admin","1234","admin@test.com"));
             accountService.addRoleToUser("sun","ROLE_USER");
             accountService.addRoleToUser("admin","ROLE_ADMIN");

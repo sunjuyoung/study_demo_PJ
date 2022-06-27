@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter
@@ -25,7 +26,7 @@ public class Account {
 
     private String password;
 
-    private boolean emailVerified; //이메일 인증 완료 여부 확인
+    private boolean emailVerified = false;
 
     private String emailCheckToken;
 
@@ -39,5 +40,15 @@ public class Account {
 
     @ManyToMany
     private List<Role> roles = new ArrayList<>();
+
+
+    public void generateToken(){
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
+
+    public void completeSignUp(){
+        this.emailVerified = true;
+        this.joinedAt = LocalDateTime.now();
+    }
 
 }

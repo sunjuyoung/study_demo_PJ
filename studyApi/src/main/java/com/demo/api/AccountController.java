@@ -33,6 +33,18 @@ public class AccountController {
         return ResponseEntity.ok().body(allUsers);
     }
 
+    @GetMapping("/user/{nickname}")
+    public  ResponseEntity<ResponseUser> getUser(@PathVariable("nickname")String nickname){
+        ResponseUser user = accountService.getUser(nickname);
+        return ResponseEntity.ok().body(user);
+    }
+
+/*    @GetMapping("/user/check_email_token")
+    public String checkEmailToken(String token, String email){
+        accountService.checkEmailToken(token,email);
+
+    }*/
+
     @PostMapping("/role/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role){
         //URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
