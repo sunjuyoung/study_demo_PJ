@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    username: root
+    username: ENC(MBo7pMY1HZC4CQrUvdIf5g==)
     url:  jdbc:mariadb://localhost:3306/studyApi
-    password: rnrdj123
+    password: ENC(CXHVxHeOOZ+EIXG4iXCFfpeZs5H7wlfy)
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -16,7 +16,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: syseoz@gmail.com
-    password: zmhklhpmtxzpcfiy
+    password: ENC(JxRE0UpO+asXY+oY3P1rZXb0HCO/H/0SBotzY0mCa5M=)
     properties:
       mail:
         debug: true
@@ -38,3 +38,8 @@ app:
 token:
   expiration_time: 43200000
   secret: secret_s
+
+## 프로퍼티 암호화 설정
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor

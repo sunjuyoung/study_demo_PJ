@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService{
         account.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
         account.generateToken();
         Account newUser = accountRepository.save(account);
-        sendSignUpConfirmEmail(newUser);
+       // sendSignUpConfirmEmail(newUser);
         return modelMapper.map(newUser,ResponseUser.class);
     }
     public void sendSignUpConfirmEmail(Account newAccount) {

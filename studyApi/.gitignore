@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+**/test/java/com/demo/config
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
