@@ -1,11 +1,4 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+
 
 spring:
   datasource:
@@ -14,14 +7,7 @@ spring:
     username: root
     password: rnrdj123
 
-  mvc:
-    view:
-      prefix: /templates/
-      suffix: .mustache
-
   jpa:
     hibernate:
-      ddl-auto: create-drop #create update none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: create-drop
     show-sql: true
