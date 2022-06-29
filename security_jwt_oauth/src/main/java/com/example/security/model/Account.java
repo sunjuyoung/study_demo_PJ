@@ -1,6 +1,7 @@
 package com.example.security.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,5 +32,18 @@ public class Account {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+
+    @Builder
+    public Account(String username, String password, String email, String role,
+                   String provider, String providerId,LocalDateTime createdAt) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.createdAt = createdAt;
     }
 }

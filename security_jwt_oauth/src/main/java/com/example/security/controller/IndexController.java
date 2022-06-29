@@ -1,6 +1,7 @@
 package com.example.security.controller;
 
 import com.example.security.auth.CurrentUser;
+import com.example.security.auth.GoogleAccount;
 import com.example.security.auth.PrincipalDetails;
 import com.example.security.model.Account;
 import com.example.security.repository.AccountRespository;
@@ -9,9 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.web.servlet.oauth2.client.OAuth2ClientSecurityMarker;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +33,26 @@ public class IndexController {
 
     @GetMapping("/test/login")//@AuthenticationPrincipal
     public @ResponseBody String testLogin(@CurrentUser Account account){
-
         log.info("/test/login============");
         log.info(account.getUsername());
-
         return "세션 정보 확인";
 
+    }
+    //oauth2 google login
+    @GetMapping("/test/oauth/login") //authentication 에 OAuth2User들어온다
+    public @ResponseBody String testOauthLogin(@AuthenticationPrincipal GoogleAccount googleAccount){
+        log.info("/test/oauth/login============");
+        log.info(googleAccount.getAttributes().toString());
+        log.info(googleAccount.getAccount().getUsername());
+        return "세션 정보 확인";
+    }
+    //oauth2 google login
+    @GetMapping("/test/oauth/login2") //
+    public @ResponseBody String testOauthLogin2(@CurrentUser Account account){
+        log.info("/test/oauth/login22222============");
+        log.info("/test/login============");
+        log.info(account.getUsername());
+        return "세션 정보 확인";
     }
 
     @GetMapping("/")
