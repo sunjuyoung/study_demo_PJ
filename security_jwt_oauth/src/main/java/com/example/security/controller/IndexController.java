@@ -1,5 +1,7 @@
 package com.example.security.controller;
 
+import com.example.security.auth.CurrentUser;
+import com.example.security.auth.PrincipalDetails;
 import com.example.security.model.Account;
 import com.example.security.repository.AccountRespository;
 import com.example.security.service.AccountService;
@@ -7,11 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -22,6 +27,15 @@ public class IndexController {
     private final AccountRespository accountRespository;
     private final AccountService accountService;
 
+    @GetMapping("/test/login")//@AuthenticationPrincipal
+    public @ResponseBody String testLogin(@CurrentUser Account account){
+
+        log.info("/test/login============");
+        log.info(account.getUsername());
+
+        return "세션 정보 확인";
+
+    }
 
     @GetMapping("/")
     public String index(){

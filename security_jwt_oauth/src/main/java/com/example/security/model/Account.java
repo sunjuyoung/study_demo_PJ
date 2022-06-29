@@ -21,6 +21,10 @@ public class Account {
     @Column(unique = true)
     private String email;
     private String role;
+
+    private String provider;
+    private String providerId;
+
     private LocalDateTime createdAt;
 
     public Account(String username, String password, String email) {

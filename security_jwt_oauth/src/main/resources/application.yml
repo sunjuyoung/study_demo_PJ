@@ -11,3 +11,18 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 310073782191-1s4874uvqv0hgdoolg8vpl9ebc31nh1b.apps.googleusercontent.com
+            client_secret: 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
+            scope:
+            - email
+            - profile
+logging:
+  level:
+    com.example.security: debug
