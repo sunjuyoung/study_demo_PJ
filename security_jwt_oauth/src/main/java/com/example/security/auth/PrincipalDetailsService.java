@@ -17,7 +17,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     private final AccountRespository accountRespository;
 
-    @Override
+    @Override//함수 종료시 @AuthenticationPrincipal 어노테이션 생성
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRespository.findByUsername(username);
         if(account == null){

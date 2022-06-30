@@ -49,16 +49,13 @@
         <p>Not a member? <a href="#!">Register</a></p>
         <p>or sign up with:</p>
         <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-facebook-f"></i>
+            <a th:href="@{/oauth2/authorization/naver}">  <i class="fab fa-neos"></i></a>
         </button>
 
         <button type="button" class="btn btn-link btn-floating mx-1">
             <a th:href="@{/oauth2/authorization/google}"> <i class="fa fa-google"></i></a>
         </button>
 
-        <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-twitter"></i>
-        </button>
 
         <button type="button" class="btn btn-link btn-floating mx-1">
             <i class="fab fa-github"></i>

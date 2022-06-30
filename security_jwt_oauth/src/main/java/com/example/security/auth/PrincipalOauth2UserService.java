@@ -1,6 +1,9 @@
 package com.example.security.auth;
 
 
+import com.example.security.auth.provider.GoogleUserInfo;
+import com.example.security.auth.provider.NaverUserInfo;
+import com.example.security.auth.provider.OAuth2UserInfo;
 import com.example.security.model.Account;
 import com.example.security.repository.AccountRespository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,10 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,18 +36,30 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         log.info("getAccessToken  ===== {}" ,userRequest.getAccessToken());
         log.info("name??  ===== {}" ,userRequest.getClientRegistration().getClientName());
         log.info("name??  ===== {}" ,userRequest.getClientRegistration().getClientId());
+        log.info("name??  ===== {}" ,userRequest.getClientRegistration().getRegistrationId());
         //구글 로그인 완료 - 코드 리턴 - 엑세스 토큰요청 -> userrequest 정보 (loadUser)
         log.info("getAttributes??  ===== {}" ,super.loadUser(userRequest).getAttributes());
 
 
         //자동 회원가입
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
 
-        String provider = userRequest.getClientRegistration().getClientId();//google
-        String providerId = oAuth2User.getAttribute("sub");
-        String email = oAuth2User.getAttribute("email");
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")){
+            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+
+        }
+
+
+
+        String provider = oAuth2UserInfo.getProvider();
+        String providerId = oAuth2UserInfo.getProviderId();
+        String email = oAuth2UserInfo.getEmail();
         String username = provider+"_"+providerId; //google_340953490
-        String password = bCryptPasswordEncoder.encode("더미패스워드");//필요없음 임의로
+        String password = bCryptPasswordEncoder.encode(UUID.randomUUID().toString());//사용하지 않는 비밀번호 임의로
         String role = "ROLE_USER";
 
         Account account = new Account();
