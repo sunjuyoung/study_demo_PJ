@@ -18,7 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
-
+**/JasyptConfig.java
+**/JasypTest.java
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

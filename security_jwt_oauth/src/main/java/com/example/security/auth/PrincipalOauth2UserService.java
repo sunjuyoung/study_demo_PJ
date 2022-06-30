@@ -53,8 +53,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         }
 
-
-
         String provider = oAuth2UserInfo.getProvider();
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();

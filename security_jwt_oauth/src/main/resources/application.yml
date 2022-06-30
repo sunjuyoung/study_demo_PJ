@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/jwtoauth
     username: root
-    password: rnrdj123
+    password: ENC(DXtztdUWm+JvwXeMRBojJFENC7yirKfw)
 
   jpa:
     hibernate:
@@ -18,16 +18,16 @@ spring:
       client:
         registration:
           google:
-            client-id: 310073782191-1s4874uvqv0hgdoolg8vpl9ebc31nh1b.apps.googleusercontent.com
-            client_secret: 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
+            client-id: ENC(UGt6S6JQ8/jx6PqsI6jXm5w6OMsv+4NpNBH6LghIUpdR02851ASK/Kh4P50ymxFR8AZ41LoIt0Gg6dKw1GyFBd5msRXd/voulMr5jWUrXkpMeD3nF+V4hQ==)
+            client_secret: ENC(3EYwhlKGsGrHzJ/XSfHEfd8b6E2+R3ShUniXhyCcIa8CXRYmxtPUUFTNf2N2Cm3G)
             scope:
             - email
             - profile
 
 
           naver:
-            client-id: hdBvlGRNNuu8vpdKNsVY
-            client-secret: gph7GvFJ9o
+            client-id: ENC(fBCUeoPP7AkQGWV2fVvf7g+w12aypfBmzwqnV+ycnHE=)
+            client-secret: ENC(IkYZqk6VW30wJ2GjCMTXSlsL05SWWdQl)
             scope:
             - name
             - email
@@ -49,3 +49,9 @@ spring:
 logging:
   level:
     com.example.security: debug
+
+
+## 프로퍼티 암호화 설정
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
