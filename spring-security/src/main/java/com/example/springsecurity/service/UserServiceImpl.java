@@ -9,14 +9,17 @@ import com.example.springsecurity.repository.PasswordTokenRepository;
 import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -83,16 +86,19 @@ public class UserServiceImpl implements UserService{
         passwordTokenRepository.save(passwordResetToken);
     }
 
+    @Transactional
     @Override
     public String validatePasswordResetToken(String token) {
         PasswordResetToken passwordResetToken =  passwordTokenRepository.findByToken(token);
         if(passwordResetToken == null){
+            log.info("inValid null");
             return "inValid";
         }
         User user = passwordResetToken.getUser();
         Calendar calendar = Calendar.getInstance();
         if((passwordResetToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0 ){
             passwordTokenRepository.delete(passwordResetToken);
+            log.info("expired");
             return "expired";
         }
 
@@ -110,5 +116,10 @@ public class UserServiceImpl implements UserService{
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean checkValidOldPassword(User user, String oldPassword) {
+        return passwordEncoder.matches(oldPassword,user.getPassword());
     }
 }

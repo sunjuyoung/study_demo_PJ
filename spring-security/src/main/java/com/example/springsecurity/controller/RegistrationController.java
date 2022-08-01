@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@RequestMapping("")
 @RequiredArgsConstructor
 public class RegistrationController {
 
@@ -40,7 +41,7 @@ public class RegistrationController {
     @PostMapping("/savePassword")
     public String savePassword(@RequestParam("token") String token, @RequestBody PasswordModel passwordModel){
         String result = userService.validatePasswordResetToken(token);
-        if(result.equalsIgnoreCase("valid")){
+        if(!result.equalsIgnoreCase("valid")){
             return "Invalid Token";
         }
 
@@ -51,6 +52,17 @@ public class RegistrationController {
         }else {
             return "Invalid Token";
         }
+
+    }
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody PasswordModel passwordModel){
+        User user = userService.findUserByEmail(passwordModel.getEmail());
+        if(!userService.checkValidOldPassword(user,passwordModel.getOldPassword())){
+            return "Invalid old password";
+        }
+
+        userService.changePassword(user,passwordModel.getNewPassword());
+        return "password change success";
 
     }
 
