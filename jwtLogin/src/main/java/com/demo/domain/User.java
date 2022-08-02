@@ -22,6 +22,15 @@ public class User {
     private String password;
     private String email;
 
+
+    public User(String name, String username, String password, String email, List<Role> roles) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+    }
+
     @ManyToMany
     private List<Role> roles = new ArrayList<>();
 }
