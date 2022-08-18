@@ -1,9 +1,15 @@
 package com.example.ddd.order;
 
 
+import com.example.ddd.member.Member;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -13,16 +19,42 @@ import java.util.List;
  * 출고 전에는 취소가 가능하다
  *
  */
-@Data
+@Entity
+@Getter
+@EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Order {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private String id;
+
+    @Enumerated(EnumType.STRING)
     private OrderState orderState;
+
+    @ManyToOne
+    private Member member;
+
+    @Embedded
     private ShippingInfo shippingInfo;
+
+
+    @OneToMany
+    @JoinColumn(name = "order_line_id")
     private List<OrderLine> orderLines;
+
     private int totalAmount;
 
+    /*    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass() )return false;
+        Order order = (Order) o;
+        return Objects.equals(number,order.number);
+    }*/
+
     //주문할때 주문상품, 배송지 정보
-    public Order(ShippingInfo shippingInfo, List<OrderLine> orderLines) {
+    public Order(ShippingInfo shippingInfo, List<OrderLine> orderLines,OrderState state) {
         setOrderLines(orderLines);
         setShippingInfo(shippingInfo);
     }
