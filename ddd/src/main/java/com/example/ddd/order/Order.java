@@ -21,18 +21,19 @@ import java.util.Objects;
  */
 @Entity
 @Getter
-@EqualsAndHashCode(of = "id")
+@Table(name = "purchase_order")
 @NoArgsConstructor
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private String id;
+    @Column(name = "order_number")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private OrderState orderState;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Embedded

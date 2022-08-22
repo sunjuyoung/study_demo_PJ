@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "member")
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,6 @@ public class Member {
 
     private String email;
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orderList = new ArrayList<>();
 
 
 }

@@ -5,13 +5,23 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table
+@Table(name = "category")
 @Getter
-@EqualsAndHashCode(of = "id")
 public class Category {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private CategoryId id;
+
+    private String name;
+
+    protected Category() {
+    }
+
+    public Category(CategoryId id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

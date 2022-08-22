@@ -4,21 +4,28 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "product")
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long id;
 
     private String name;
 
-    private String category_id;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "product_category",joinColumns = @JoinColumn(name = "product_id"))
+    private List<CategoryId> categoryIds;
+
+    private String detail;
+
+    private int price;
+
 }

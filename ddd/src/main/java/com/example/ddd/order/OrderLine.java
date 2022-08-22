@@ -9,14 +9,15 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table
+@Table(name = "order_line")
 public class OrderLine {
 
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_line_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
     
     private int price;
