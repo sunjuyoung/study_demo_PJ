@@ -32,7 +32,6 @@ public class Member {
     }
 
 
-    @Builder
     public Member(String email, String password, String address,  PasswordEncoder passwordEncoder) {
         this.email = email;
         this.password = passwordEncoder.encode(password);
@@ -40,5 +39,8 @@ public class Member {
         this.role = Role.USER;
     }
 
+    public void changeRoleByAdmin(){
+        this.role = Role.ADMIN;
+    }
 
 }

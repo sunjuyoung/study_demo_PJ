@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.example.demo.exception.OutOfStockException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,11 @@ public class Item extends BaseTime{
     private ItemSellStatus itemSellStatus;
 
 
-
-
+    public void removeStock(int count) {
+        int restStock = this.stockNumber - count;
+        if(restStock<0){
+            throw new OutOfStockException("상품의 재고가 부족 합니다. (현재 재고 수량: " + this.stockNumber + ")");
+        }
+        this.stockNumber-=count;
+    }
 }

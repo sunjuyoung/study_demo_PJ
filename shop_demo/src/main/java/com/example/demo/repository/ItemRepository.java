@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Long>,ItemQuerydslRepository {
 
-    List<Item> findByItemName(String name);
+    Item findByItemName(String name);
 }
