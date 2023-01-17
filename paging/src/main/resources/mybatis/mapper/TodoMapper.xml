@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.paging.repository.TodoMapperRepository">
+
+    <sql id="search">
+        <where>
+            <if test="types != null and types.length > 0">
+                <foreach collection="types" item="type" open="(" close=") " separator=" OR ">
+                    <if test="type == 't'.toString()">
+                        title like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        writer like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+
+            <if test="finished">
+                <trim prefix="and">
+                    finished = 1
+                </trim>
+            </if>
+
+            <if test="from != null and to != null">
+                <trim prefix="and">
+                    dueDate between  #{from} and #{to}
+                </trim>
+            </if>
+        </where>
+    </sql>
+
+    <insert id="save1">
+        insert into todo (title, due_date, writer, finished,content)
+        values ( #{title}, #{dueDate}, #{writer}, false , #{content})
+    </insert>
+
+    <select id="getTodos" resultType="com.example.paging.domain.Todo">
+        select * from todo where tno =#{tno}
+    </select>
+
+    <select id="getTodo" resultType="com.example.paging.domain.Todo">
+        select * from todo order by tno desc
+    </select>
+
+    <select id="selectList" resultType="com.example.paging.domain.Todo">
+        select * from toto
+        <include refid="search"></include>
+        order by tno desc limit #{skip}, #{size}
+    </select>
+
+
+</mapper>
